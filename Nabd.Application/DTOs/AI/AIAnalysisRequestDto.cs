@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Shared.DTOs.AI
+namespace Nabd.Application.DTOs.AI
 {
     internal class AIAnalysisRequestDto
     {

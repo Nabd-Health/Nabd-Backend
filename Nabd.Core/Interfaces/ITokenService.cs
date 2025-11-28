@@ -26,7 +26,8 @@ namespace Nabd.Core.Interfaces
         /// يُنشئ توكن جديد لتجديد صلاحية الجلسة آليًا.
         /// </summary>
         /// <returns>كائن RefreshToken جديد.</returns>
-        Task<RefreshToken> GenerateRefreshToken(string ipAddress);
+       
+        Task<RefreshToken> GenerateRefreshToken(Guid appUserId, string ipAddress);
 
         /// <summary>
         /// يُبطل توكن التجديد (RefreshToken) الحالي ويُسجل توكنًا بديلاً له.

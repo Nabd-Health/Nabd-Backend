@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Shared.DTOs.Consultations
+namespace Nabd.Application.DTOs.Consultations
 {
     internal class CreateConsultationDto
     {

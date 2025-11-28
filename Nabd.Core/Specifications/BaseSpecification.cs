@@ -12,14 +12,15 @@ namespace Nabd.Core.Specifications
         // ==========================================
 
         // Criteria: شرط الفلترة (WHERE) - مسموح بـ null لأنه اختياري
-        public Expression<Func<T, bool>>? Criteria { get; private set; }
+        
+        public Expression<Func<T, bool>> Criteria { get; private set; } = default!;
 
         // Includes: قائمة بالجداول المراد ربطها (Eager Loading)
         public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
 
         // Ordering: الترتيب (مسموح بـ null)
-        public Expression<Func<T, object>>? OrderBy { get; private set; }
-        public Expression<Func<T, object>>? OrderByDescending { get; private set; }
+        public Expression<Func<T, object>> OrderBy { get; private set; } = default!;
+        public Expression<Func<T, object>> OrderByDescending { get; private set; } = default!;
 
         // Grouping: للتجميع في التقارير
         public Expression<Func<T, object>>? GroupBy { get; private set; }

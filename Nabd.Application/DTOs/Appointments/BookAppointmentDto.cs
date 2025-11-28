@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Shared.DTOs.Appointments
+namespace Nabd.Application.DTOs.Appointments
 {
     internal class BookAppointmentDto
     {

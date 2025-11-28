@@ -9,10 +9,12 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="12.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nabd.Core\Nabd.Core.csproj" />
+    <ProjectReference Include="..\Nabd.Infrastructure\Nabd.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
