@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nabd.Core.Enums
 {
-    internal class Gender
+    public enum Gender
     {
+        Male = 1,
+        Female = 2
     }
 }

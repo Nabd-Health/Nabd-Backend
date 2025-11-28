@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Application.DTOs.AI
+namespace Nabd.Shared.DTOs.AI
 {
     internal class AIPredictionResponseDto
     {

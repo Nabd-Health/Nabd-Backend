@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Application.DTOs.Consultations
+namespace Nabd.Shared.DTOs.Consultations
 {
     internal class ConsultationViewDto
     {

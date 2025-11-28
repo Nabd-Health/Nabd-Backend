@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nabd.Application.DTOs.Auth
+namespace Nabd.Shared.DTOs.Auth
 {
     internal class AuthResponseDto
     {
