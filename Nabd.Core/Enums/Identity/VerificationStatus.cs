@@ -1,0 +1,25 @@
+﻿using System.ComponentModel;
+
+namespace Nabd.Core.Enums.Identity
+{
+    public enum VerificationStatus
+    {
+        [Description("غير معتمد")]
+        Unverified = 0,
+
+        [Description("تحت المراجعة")]
+        UnderReview = 1,
+
+        [Description("معتمد")]
+        Verified = 2,
+
+        [Description("مرفوض")]
+        Rejected = 3,
+
+        [Description("معلق")]
+        Suspended = 4,
+
+        [Description("مُرسل")]
+        Sent = 5
+    }
+}
