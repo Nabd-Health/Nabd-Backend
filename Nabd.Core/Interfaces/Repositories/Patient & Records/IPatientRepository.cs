@@ -3,49 +3,31 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nabd.Core.Entities.Profiles;
 using Nabd.Core.Interfaces.Repositories.Base;
-using Nabd.Core.DTOs; // ✅ استخدام الـ DTO من داخل الـ Core
+using Nabd.Core.DTOs; // ✅ هذا هو السطر المفقود والمهم جداً
 
 namespace Nabd.Core.Interfaces.Repositories.Profiles
 {
-    // هذا الريبوزيتوري مسؤول عن إدارة عمليات استرجاع وبيانات المرضى
     public interface IPatientRepository : IGenericRepository<Patient>
     {
-        // ==========================================
-        // I. Core Retrieval (الاسترجاع الأساسي)
-        // ==========================================
-
-        // 1. استرجاع المريض مع كل البيانات المطلوبة في صفحة البروفايل (MedicalHistory, Attachments, Reviews)
+        // 1. استرجاع المريض مع التفاصيل
         Task<Patient?> GetByIdWithDetailsAsync(Guid id);
 
-        // 2. البحث عن المريض بالبريد الإلكتروني (لتسجيل الدخول / الأمان)
+        // 2. البحث بالإيميل
         Task<Patient?> GetByEmailAsync(string email);
 
-        // 3. جلب جميع المرضى مع ملفاتهم الطبية (مهم لتجهيز البيانات لـ AI Training)
+        // 3. المرضى مع تاريخهم الطبي
         Task<IEnumerable<Patient>> GetPatientsWithMedicalHistoryAsync();
 
-        // ==========================================
-        // II. Specialized & Optimized Queries
-        // ==========================================
-
-        // 4. جلب قائمة المرضى الخاصين بطبيب معين (مع Pagination والأداء الأمثل)
-        // (مهم لـ Doctor Dashboard لكي يرى مرضاه فقط)
-        // ✅ تم استخدام DTO موجود في Core لضمان صحة المعمارية
+        // 4. ✅ هنا كان الإيرور بسبب نقص الـ using
         Task<(IEnumerable<DoctorPatientDto> Patients, int TotalCount)> GetDoctorPatientsOptimizedAsync(
             Guid doctorId,
             int pageNumber,
             int pageSize);
 
-        /// <summary>
-        /// جلب المريض مع الموقع الجغرافي (للبحث عن أي شيء قريب منه)
-        /// </summary>
-        Task<Patient?> GetPatientWithLocationAsync(Guid patientId); // تم تغيير Address إلى Location ليعكس طبيعة البيانات الحديثة
+        // 5. البحث بالموقع
+        Task<Patient?> GetPatientWithLocationAsync(Guid patientId);
 
-        // ==========================================
-        // III. Write Operations (العمليات الكتابية)
-        // ==========================================
-
-        // 5. الحذف (Soft Delete): تحديد ما إذا كان الحذف سيكون مؤقتًا أو نهائيًا
-        // (مهم جدًا للحفاظ على السجل الطبي)
+        // 6. الحذف
         Task RemoveAsync(Patient patient, bool softDelete = true);
     }
 }

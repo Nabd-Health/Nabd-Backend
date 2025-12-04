@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Nabd.Application.DTOs.Identity;
+using Nabd.Core.DTOs;
 using System.Text.RegularExpressions;
 
 namespace Nabd.Application.Validators.Identity

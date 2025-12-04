@@ -5,7 +5,7 @@ using Nabd.Core.Entities.Base;
 namespace Nabd.Core.Specifications
 {
     // هذا الكلاس هو القالب الذي سترث منه كل الاستعلامات المحددة (Specific Queries)
-    public abstract class BaseSpecification<T> : ISpecification<T> where T : BaseEntity
+    public abstract class BaseSpecification<T> : ISpecification<T> where T : class
     {
         // ==========================================
         // 1. الخصائص (Properties) التي تنفذ عقد ISpecification

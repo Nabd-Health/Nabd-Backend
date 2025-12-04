@@ -1,86 +1,51 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Medical; // عشان ConsultationRecord
-using Nabd.Core.Enums;           // عشان AIRequestType و AIDoctorAction
+using Nabd.Core.Entities.Medical;
 using System.ComponentModel.DataAnnotations;
 
 namespace Nabd.Core.Entities.AI
 {
-    // هذا الجدول هو "الصندوق الأسود" الذي يسجل أداء الذكاء الاصطناعي
     public class AIDiagnosisLog : BaseEntity
     {
         // ==========================================
-        // 1. Context (سياق الطلب)
+        // 1. Linkage (سياق التشخيص)
         // ==========================================
-
-        // الكشف المرتبط بهذه العملية
         public Guid ConsultationRecordId { get; set; }
-        public virtual required ConsultationRecord ConsultationRecord { get; set; }
-
-        // نوع العملية: هل بنسأل عن تشخيص؟ ولا بنحلل روشتة؟
-        // (عشان الجدول ده بيخدم الموديلين)
-        public AIRequestType RequestType { get; set; } = AIRequestType.Diagnosis;
+        public virtual ConsultationRecord ConsultationRecord { get; set; } = null!;
 
         // ==========================================
-        // 2. Input Data (ماذا أرسلنا للموديل؟)
+        // 2. AI Input & Output (ماذا دخل وماذا خرج)
         // ==========================================
 
-        // النص الأساسي المرسل (الأعراض أو الأدوية)
-        public required string InputText { get; set; }
+        [Required]
+        public required string InputSymptoms { get; set; } // النص الذي حلله الموديل
 
-        // لقطة (Snapshot) من العلامات الحيوية وقت الإرسال (JSON)
-        // عشان لو المريض ضغطه اتغير بعدين، نعرف الموديل حكم بناءً على إيه وقتها
-        public string? InputVitalsSnapshot { get; set; }
+        [Required]
+        public required string AIResponseJson { get; set; } // النتيجة (JSON) تحتوي على الأمراض المحتملة ونسب الثقة
 
-        // ==========================================
-        // 3. Model Metadata (بيانات الموديل نفسه - MLOps)
-        // ==========================================
+        public double HighestConfidenceScore { get; set; } // أعلى نسبة ثقة وصل لها الموديل (لتحليل الأداء)
 
-        // اسم الموديل المستخدم (مثال: "Nabd-BERT-Ar")
-        [MaxLength(50)]
-        public required string ModelName { get; set; }
-
-        // رقم إصدار الموديل (مهم جداً للمقارنة لاحقاً - A/B Testing)
-        // مثال: "v1.0.2"
-        [MaxLength(20)]
-        public required string ModelVersion { get; set; }
+        public string ModelVersion { get; set; } = "v1.0"; // إصدار الموديل (مهم للمقارنة بعد التحديث)
 
         // ==========================================
-        // 4. Performance Metrics (مراقبة الأداء)
+        // 3. Doctor Feedback (حلقة التعلم)
         // ==========================================
 
-        public DateTime RequestTimestamp { get; set; } // متى خرج الطلب
-        public DateTime ResponseTimestamp { get; set; } // متى وصل الرد
 
-        // الوقت المستغرق بالمللي ثانية (Latency)
-        public long ProcessingDurationMs { get; set; }
+        /// <summary>
+        public long? ProcessingDurationMs { get; set; } // سرعة الاستجابة
+        public DateTime RequestTimestamp { get; set; } = DateTime.UtcNow;
 
-        // ==========================================
-        // 5. Output Data (رد الموديل)
-        // ==========================================
+        // Feedback loop properties
+        public string? DoctorAction { get; set; } // "Accepted", "Modified", "Rejected"
+        public string? CorrectedDiagnosis { get; set; } // كان اسمها DoctorCorrection في النسخة السابقة
+        public string? FeedbackNotes { get; set; } // ملاحظات الطبيب
+        /// </summary>
+        public bool? IsHelpful { get; set; } // هل ساعد التشخيص الطبيب؟
 
-        // الرد الخام القادم من البايثون (Full JSON Response)
-        public required string RawResponseJson { get; set; }
+        public bool? WasCorrect { get; set; } // هل كان التشخيص صحيحاً؟
 
-        // أعلى اقتراح الموديل قاله (Top Prediction)
-        [MaxLength(100)]
-        public string? TopPrediction { get; set; }
+        public string? DoctorCorrection { get; set; } // التشخيص الصحيح الذي اختاره الطبيب (Ground Truth)
 
-        // نسبة الثقة في أعلى اقتراح (0.0 - 1.0)
-        public double TopConfidenceScore { get; set; }
-
-        // ==========================================
-        // 6. Feedback Loop (التعلم والتحسين) - الأهم
-        // ==========================================
-
-        // ماذا فعل الطبيب بالاقتراح؟
-        public AIDoctorAction DoctorAction { get; set; } = AIDoctorAction.NoAction;
-
-        // لو الطبيب رفض الاقتراح، اختار إيه بداله؟ (الحقيقة المطلقة Ground Truth)
-        // ده العمود اللي هنستخدمه عشان نعيد تدريب الموديل (Re-training)
-        public string? CorrectedDiagnosis { get; set; }
-
-        // ملاحظات الطبيب على أداء الـ AI (اختياري)
-        [MaxLength(500)]
-        public string? FeedbackNotes { get; set; }
+        public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
     }
 }

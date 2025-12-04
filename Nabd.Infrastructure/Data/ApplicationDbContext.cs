@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/* 
+ * using Microsoft.EntityFrameworkCore;
 using Nabd.Core.Entities.AI;
 using Nabd.Core.Entities.Identity;
 using Nabd.Core.Entities.Medical;
@@ -124,12 +125,11 @@ namespace Nabd.Infrastructure.Data
 
             // الروشتة والأدوية (Composition: One-to-Many)
             // لو مسحنا الروشتة، بنمسح سطور الأدوية اللي جواها (Cascade هنا مسموح لأنه جزء منها)
-            modelBuilder.Entity<Prescription>()
-                .HasMany(p => p.Items)
-                .WithOne(i => i.Prescription)
-                .HasForeignKey(i => i.PrescriptionId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+    modelBuilder.Entity<Prescription>()
+    .HasMany(p => p.PrescriptionItems) // ✅ تم التصحيح
+    .WithOne(i => i.Prescription)
+    .HasForeignKey(i => i.PrescriptionId)
+    .OnDelete(DeleteBehavior.Cascade);
             // -----------------------------------------------------
             // علاقات الفروع والمواعيد (Branch & Schedule)
             // -----------------------------------------------------
@@ -157,3 +157,4 @@ namespace Nabd.Infrastructure.Data
         }
     }
 }
+*/

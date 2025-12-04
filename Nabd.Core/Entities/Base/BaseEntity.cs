@@ -37,6 +37,6 @@ namespace Nabd.Core.Entities.Base
 
         // ده بيمنع تضارب البيانات (Optimistic Concurrency)
         [Timestamp]
-        public required byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }

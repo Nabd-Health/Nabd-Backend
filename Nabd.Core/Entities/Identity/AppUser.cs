@@ -1,20 +1,20 @@
-﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Profiles;
-using Nabd.Core.Enums;
+﻿using Microsoft.AspNetCore.Identity;
+using Nabd.Core.Entities.Identity; // RefreshToken
+using Nabd.Core.Entities.Profiles; // Doctor, Patient
 using Nabd.Core.Enums.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nabd.Core.Entities.Identity
 {
-    // هذا الكلاس يمثل "حساب الدخول" الموحد للنظام
-    public class AppUser : BaseEntity
+    // ✅ التعديل: الوراثة من IdentityUser<Guid>
+    public class AppUser : IdentityUser<Guid>
     {
         // ==========================================
-        // 1. Identity Info (الهوية الأساسية)
+        // 1. Identity Info
         // ==========================================
-
         [Required, MaxLength(50)]
         public required string FirstName { get; set; }
 
@@ -24,73 +24,37 @@ namespace Nabd.Core.Entities.Identity
         [NotMapped]
         public string DisplayName => $"{FirstName} {LastName}";
 
-        [Required, EmailAddress, MaxLength(200)]
-        public required string Email { get; set; }
-
-        [Required]
-        public required string UserName { get; set; }
-
-        public string? ProfilePictureUrl { get; set; } // (من شريان: صورة الحساب العامة)
-
-        // ==========================================
-        // 2. Authentication (المصادقة)
-        // ==========================================
-
-        [Required]
-        public required string PasswordHash { get; set; }
-
-        // بصمة أمنية تتغير مع كل تغيير للباسورد (لطرد الجلسات القديمة)
-        [Required]
-        public required string SecurityStamp { get; set; }
-
-        // ==========================================
-        // 3. Security & Verification (الأمان والتوثيق)
-        // ==========================================
-
-        public bool EmailConfirmed { get; set; } = false;
-        public DateTime? EmailVerifiedAt { get; set; } // (من شريان: توقيت التفعيل)
-
-        [Phone]
-        public string? PhoneNumber { get; set; }
-        public bool PhoneNumberConfirmed { get; set; } = false;
-
-        public bool TwoFactorEnabled { get; set; } = false;
-
-        // --- Lockout System (الحظر المؤقت) ---
-        public bool LockoutEnabled { get; set; } = true;
-        public int AccessFailedCount { get; set; }
-        public DateTimeOffset? LockoutEnd { get; set; }
-
-        // ==========================================
-        // 4. Audit & Tracking (المراقبة)
-        // ==========================================
+        public string? ProfilePictureUrl { get; set; }
 
         public DateTime LastLoginDate { get; set; } = DateTime.UtcNow;
-        public string? LastLoginIp { get; set; } // (من شريان: IP آخر دخول)
+        public string? LastLoginIp { get; set; }
+        // ==========================================
+        // 2. Auditing (نسخناهم هنا لأننا شلنا BaseEntity)
+        // ==========================================
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? CreatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? UpdatedBy { get; set; }
+
+        // Soft Delete
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+        public string? DeletedBy { get; set; }
 
         // ==========================================
-        // 5. OAuth Support (دخول بجوجل/فيسبوك - من شريان)
+        // 3. System Role
         // ==========================================
-
-        public bool IsOAuthAccount { get; set; } = false;
-        public string? OAuthProvider { get; set; } // e.g., "Google", "Facebook"
-        public string? OAuthProviderId { get; set; } // User ID from Google
-
-        // ==========================================
-        // 6. System Role (الدور)
-        // ==========================================
-
         public required UserType UserType { get; set; }
 
         // ==========================================
-        // 7. Relationships (الربط)
+        // 4. Relationships
         // ==========================================
-
-        // ربط ببروفايل الدكتور أو المريض (One-to-One)
         public Doctor? DoctorProfile { get; set; }
         public Patient? PatientProfile { get; set; }
 
-        // قائمة التوكنز (للبقاء مسجل الدخول)
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
+        // ملاحظة: خصائص مثل Email, UserName, PasswordHash, PhoneNumber
+        // موجودة بالفعل داخل IdentityUser فمش محتاجين نكتبها تاني
     }
 }

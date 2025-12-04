@@ -56,7 +56,7 @@ namespace Nabd.Shared.Extensions
                     {
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
-                            context.Response.Headers.Add("Token-Expired", "true");
+                            context.Response.Headers["Access-Control-Allow-Origin"] = "*";
                         }
                         return Task.CompletedTask;
                     }

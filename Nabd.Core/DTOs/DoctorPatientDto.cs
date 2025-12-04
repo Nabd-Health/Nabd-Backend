@@ -2,23 +2,27 @@
 
 namespace Nabd.Core.DTOs
 {
-    /// <summary>
-    /// DTO خفيف وسريع لعرض قائمة المرضى في Dashboard الطبيب.
-    /// (تم وضعه في Core لأنه يُستخدم كـ Return Type للـ Repository Interface)
-    /// </summary>
     public class DoctorPatientDto
     {
-        public Guid PatientId { get; set; }
+        public Guid Id { get; set; }
+
+        // البيانات الشخصية
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string FullName => $"{FirstName} {LastName}"; // خاصية مساعدة للعرض
+
         public string? PhoneNumber { get; set; }
+        public string? Gender { get; set; }
+        public int Age { get; set; }
         public string? ProfileImageUrl { get; set; }
+
+        // بيانات الموقع
         public string? City { get; set; }
         public string? Governorate { get; set; }
 
-        // Metrics (خصائص محسوبة داخل الاستعلام)
-        public int TotalSessions { get; set; }
-        public DateTime? LastVisitDate { get; set; }
-        public decimal? Rating { get; set; }
+        // إحصائيات طبية (تخص هذا الطبيب)
+        public DateTime? LastVisitDate { get; set; } // آخر زيارة للعيادة دي
+        public int TotalSessions { get; set; }       // عدد مرات الكشف عند الطبيب ده
+        public decimal? Rating { get; set; }         // تقييم المريض (لو متاح)
     }
 }

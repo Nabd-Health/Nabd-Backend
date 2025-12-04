@@ -55,6 +55,6 @@ namespace Nabd.Core.Entities.Pharmacy
         // 4. Contents (الأدوية)
         // ==========================================
 
-        public virtual ICollection<PrescriptionItem> Items { get; set; } = new List<PrescriptionItem>();
+        public virtual ICollection<PrescriptionItem> PrescriptionItems { get; set; } = new List<PrescriptionItem>();
     }
 }

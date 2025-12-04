@@ -20,7 +20,7 @@ namespace Nabd.Application.Mappers
                     src.Doctor != null ? src.Doctor.FullName : string.Empty))
                 .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src =>
                     src.Patient != null ? src.Patient.FullName : string.Empty))
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items)); // ربط قائمة الأدوية
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.PrescriptionItems)); // ربط قائمة الأدوية
 
             // 2. Request DTO -> Entity
             CreateMap<CreatePrescriptionRequest, Prescription>()

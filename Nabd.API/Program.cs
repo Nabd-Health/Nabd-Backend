@@ -1,39 +1,60 @@
-﻿using Nabd.API.Extensions;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+﻿using Nabd.API.Extensions; // عشان AddApplicationServices
+using Nabd.Infrastructure.Extensions; // عشان AddIdentityServices (نقلناها هنا)
+using Nabd.Shared.Extensions; // عشان Authentication, Cors, Seeding
+using Nabd.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ===========================================
-// 1. تسجيل الخدمات (Services Registration)
-// ===========================================
+// ====================================================
+// 1. تسجيل الخدمات (Services Container)
+// ====================================================
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 👇 توصيل الداتابيز والـ UoW (من ApplicationServiceExtensions)
-// builder.Services.AddApplicationServices(builder.Configuration);
+// A. خدمات التطبيق والبنية التحتية (Core & Infra & Application)
+// ✅ التعديل 1: مررنا Configuration لأن الدالة بتحتاجها لضبط الـ DbContext
+builder.Services.AddApplicationServices(builder.Configuration);
 
-// 👇 توصيل خدمات الـ JWT والـ Auth (من IdentityServiceExtensions)
-builder.Services.AddIdentityServices(builder.Configuration);
+// B. خدمات الهوية (Identity)
+// ✅ التعديل 2: الاسم الصحيح حسب الملف اللي عملناه في Infrastructure
+builder.Services.AddIdentityServices();
 
-// 👇 سياسة CORS: السماح لـ React (localhost:3000) بالتواصل مع الـ API
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .WithOrigins("http://localhost:3000"); // هذا هو المنفذ الافتراضي لـ React/Vite
-    });
-});
+// C. إعدادات الأمان والتواصل (Shared)
+// ✅ التعديل 3: استخدام دوال Shared اللي جهزناها
+builder.Services.AddJwtAuthentication(builder.Configuration);
+// builder.Services.AddAuthorizationPolicies(); // (مؤجل حالياً)
+builder.Services.AddCorsConfiguration(builder.Configuration);
+// builder.Services.AddEmailServices(builder.Configuration); // (مؤجل لو مفيش إعدادات SMTP)
 
 var app = builder.Build();
 
-// ===========================================
-// 2. تفعيل الـ Middleware (Pipeline Configuration)
-// ===========================================
+// ====================================================
+// 2. إعدادات الـ Middleware (HTTP Pipeline)
+// ====================================================
+
+// ✅ تهيئة قاعدة البيانات (Migrations & Seeding) أوتوماتيكياً عند البدء
+// ده الكود السحري اللي بيعمل Update-Database لوحده
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // 1. تطبيق الميجريشن (إنشاء الجداول)
+        var context = services.GetRequiredService<NabdDbContext>();
+        await context.Database.MigrateAsync();
+
+        // 2. ملء البيانات الأولية (Seeding)
+        await DatabaseSeederExtension.SeedDatabaseAsync(app);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred during migration/seeding.");
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,10 +64,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 👇 تفعيل سياسة CORS
-app.UseCors("CorsPolicy");
+// تفعيل الـ CORS
+app.UseCors("NabdCorsPolicy");
 
-// 👇 تفعيل الـ Authentication (مهم أن يكون قبل الـ Authorization)
+// ترتيب الـ Auth مهم جداً
 app.UseAuthentication();
 app.UseAuthorization();
 
