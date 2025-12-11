@@ -17,34 +17,34 @@ namespace Nabd.Core.Entities.AI
         // ==========================================
 
         [Required]
-        public required string InputSymptoms { get; set; } // النص الذي حلله الموديل
+        public required string InputSymptoms { get; set; } 
 
         [Required]
-        public required string AIResponseJson { get; set; } // النتيجة (JSON) تحتوي على الأمراض المحتملة ونسب الثقة
+        public required string AIResponseJson { get; set; } 
 
-        public double HighestConfidenceScore { get; set; } // أعلى نسبة ثقة وصل لها الموديل (لتحليل الأداء)
+        public double HighestConfidenceScore { get; set; } 
 
-        public string ModelVersion { get; set; } = "v1.0"; // إصدار الموديل (مهم للمقارنة بعد التحديث)
+        public string ModelVersion { get; set; } = "v1.0"; 
 
         // ==========================================
         // 3. Doctor Feedback (حلقة التعلم)
         // ==========================================
 
 
-        /// <summary>
-        public long? ProcessingDurationMs { get; set; } // سرعة الاستجابة
+        
+        public long? ProcessingDurationMs { get; set; } 
         public DateTime RequestTimestamp { get; set; } = DateTime.UtcNow;
 
-        // Feedback loop properties
-        public string? DoctorAction { get; set; } // "Accepted", "Modified", "Rejected"
-        public string? CorrectedDiagnosis { get; set; } // كان اسمها DoctorCorrection في النسخة السابقة
-        public string? FeedbackNotes { get; set; } // ملاحظات الطبيب
-        /// </summary>
-        public bool? IsHelpful { get; set; } // هل ساعد التشخيص الطبيب؟
+       
+        public string? DoctorAction { get; set; } 
+        public string? CorrectedDiagnosis { get; set; } 
+        public string? FeedbackNotes { get; set; } 
+      
+        public bool? IsHelpful { get; set; } 
 
-        public bool? WasCorrect { get; set; } // هل كان التشخيص صحيحاً؟
+        public bool? WasCorrect { get; set; } 
 
-        public string? DoctorCorrection { get; set; } // التشخيص الصحيح الذي اختاره الطبيب (Ground Truth)
+        public string? DoctorCorrection { get; set; } 
 
         public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
     }

@@ -1,6 +1,6 @@
-﻿using Nabd.Core.Enums; // عشان Governorate و Gender
+﻿using Nabd.Core.Enums; 
 using Nabd.Core.Enums.Identity;
-using Nabd.Core.Enums.Medical; // عشان MedicalSpecialty
+using Nabd.Core.Enums.Medical; 
 using Nabd.Core.Enums.Operations;
 using System.ComponentModel.DataAnnotations;
 
@@ -46,11 +46,11 @@ namespace Nabd.Core.DTOs
         public MedicalSpecialty Specialization { get; set; }
 
         [Required(ErrorMessage = "رقم ترخيص مزاولة المهنة مطلوب")]
-        public string MedicalLicenseNumber { get; set; } = string.Empty; // مهم للتوثيق
+        public string MedicalLicenseNumber { get; set; } = string.Empty;
 
-        public string? Bio { get; set; } // نبذة عن الدكتور
+        public string? Bio { get; set; } 
 
-        public int YearsOfExperience { get; set; } // عدد سنوات الخبرة
+        public int YearsOfExperience { get; set; } 
 
         // =======================================================
         // 3. بيانات العيادة الأساسية (Primary Clinic Info)
@@ -64,8 +64,8 @@ namespace Nabd.Core.DTOs
         [Required(ErrorMessage = "عنوان العيادة مطلوب")]
         public string ClinicAddress { get; set; } = string.Empty;
 
-        public string? City { get; set; } // المدينة (مثل: الزقازيق)
+        public string? City { get; set; } 
 
-        public Governorate Governorate { get; set; } // المحافظة (مثل: الشرقية)
+        public Governorate Governorate { get; set; } 
     }
 }

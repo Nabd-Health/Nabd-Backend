@@ -5,16 +5,16 @@ namespace Nabd.Core.Enums.Operations
     public enum AppointmentStatus
     {
         [Description("في الانتظار")]
-        Pending = 0, // ضفتلك دي عشان لو الحجز لسه الدكتور ما أكدوش
+        Pending = 0, 
 
         [Description("محجوز ومؤكد")]
         Confirmed = 1,
 
         [Description("وصل المريض")]
-        CheckedIn = 2, // المريض وصل العيادة (Waiting Room)
+        CheckedIn = 2, 
 
         [Description("الكشف جاري")]
-        InProgress = 3, // المريض داخل غرفة الكشف
+        InProgress = 3, 
 
         [Description("انتهى الموعد")]
         Completed = 4,

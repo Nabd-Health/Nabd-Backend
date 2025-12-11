@@ -1,6 +1,6 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Pharmacy; // عشان يشوف Prescription
-using Nabd.Core.Entities.AI;       // عشان يشوف AIDiagnosisLog
+using Nabd.Core.Entities.Pharmacy; 
+using Nabd.Core.Entities.AI;       
 using System.ComponentModel.DataAnnotations;
 
 namespace Nabd.Core.Entities.Medical
@@ -19,69 +19,68 @@ namespace Nabd.Core.Entities.Medical
         // ==========================================
 
         [Required]
-        // الشكوى الرئيسية باختصار (مثال: "سخونية وكحة")
+    
         public required string ChiefComplaint { get; set; }
 
         [Required]
-        // الأعراض التفصيلية (النص الكامل اللي هيروح لموديل NLP)
+       
         public required string Symptoms { get; set; }
 
-        // تاريخ المرض الحالي (HPI) - اختياري
+   
         public string? HistoryOfPresentIllness { get; set; }
 
         // ==========================================
-        // 3. (O)bjective Data: العلامات الحيوية (AI Features)
+        // 3. (O)bjective Data: (AI Features)
         // ==========================================
-        // حولناها لأرقام عشان الـ AI يقدر يحلل الخطورة
+        
 
-        public string? PhysicalExaminationNotes { get; set; } // الفحص السريري
+        public string? PhysicalExaminationNotes { get; set; } 
 
-        // العلامات الحيوية (Vitals)
-        public double? Temperature { get; set; }         // الحرارة
-        public int? SystolicBloodPressure { get; set; }  // الضغط الانقباضي (120)
-        public int? DiastolicBloodPressure { get; set; } // الضغط الانبساطي (80)
-        public int? HeartRate { get; set; }              // النبض (BPM)
-        public int? RespiratoryRate { get; set; }        // معدل التنفس
-        public double? OxygenSaturation { get; set; }    // نسبة الأكسجين (SPO2)
-        public double? WeightAtVisit { get; set; }       // الوزن (مهم لجرعات الأطفال)
+     
+        public double? Temperature { get; set; }         
+        public int? SystolicBloodPressure { get; set; }  
+        public int? DiastolicBloodPressure { get; set; } 
+        public int? HeartRate { get; set; }             
+        public int? RespiratoryRate { get; set; }        
+        public double? OxygenSaturation { get; set; }   
+        public double? WeightAtVisit { get; set; }       
 
         // ==========================================
         // 4. (A)ssessment: التشخيص (AI Output / Ground Truth)
         // ==========================================
 
-        // التشخيص المبدئي (ممكن يكون اقتراح الـ AI)
+     
         public string? ProvisionalDiagnosis { get; set; }
 
         [Required]
-        // التشخيص النهائي المعتمد من الطبيب (ده اللي هنستخدمه لتدريب الموديل)
+     
         public required string FinalDiagnosis { get; set; }
 
-        // كود المرض العالمي (ICD-10) - لو حبينا نربط بنظام تأمين
         public string? DiagnosisCode { get; set; }
 
         // ==========================================
         // 5. (P)lan: الخطة العلاجية (Prescription AI Input)
         // ==========================================
 
-        public string? TreatmentPlan { get; set; } // نصائح عامة (راحة، سوائل..)
+        public string? TreatmentPlan { get; set; } 
 
-        public string? PrescriptionNotes { get; set; } // ملاحظات إضافية على الروشتة
+        public string? PrescriptionNotes { get; set; } 
 
-        public DateTime? RecommendedFollowUpDate { get; set; } // موعد المتابعة
+        public DateTime? RecommendedFollowUpDate { get; set; } 
 
         // ==========================================
         // 6. AI Metadata & Relationships
         // ==========================================
 
-        public bool WasAIAssisted { get; set; } = false; // هل استخدم الـ AI؟
+        public bool WasAIAssisted { get; set; } = false; 
 
-        // سجلات الحوار مع الـ AI (الاقتراحات اللي طلعت في الكشف ده)
+      
         public virtual ICollection<AIDiagnosisLog> AIDiagnosisLogs { get; set; } = new List<AIDiagnosisLog>();
 
-        // الروشتات والأدوية اللي اتكتبت بناءً على الكشف
+  
         public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 
-        // المرفقات (أشعة وتحاليل خاصة بالكشف ده)
+        
         public virtual ICollection<MedicalAttachment> Attachments { get; set; } = new List<MedicalAttachment>();
     }
 }

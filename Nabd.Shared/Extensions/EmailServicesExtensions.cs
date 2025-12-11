@@ -2,15 +2,15 @@
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nabd.Shared.Configurations; // Namespace الجديد
+using Nabd.Shared.Configurations; 
 
 namespace Nabd.Shared.Extensions
 {
-    public static class EmailServicesExtensions // تم تصحيح Spelling كلمة Extensions
+    public static class EmailServicesExtensions 
     {
         public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
         {
-            // قراءة الإعدادات من appsettings.json
+            
             var emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();
 
             if (emailSettings == null)

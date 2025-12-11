@@ -21,7 +21,7 @@ namespace Nabd.Infrastructure.Repositories.System
         public async Task<string?> GetValueByKeyAsync(string key)
         {
             var param = await _dbSet
-                .AsNoTracking() // أداء أسرع لأننا بنقرأ بس
+                .AsNoTracking() 
                 .FirstOrDefaultAsync(p => p.Key == key);
 
             return param?.Value;

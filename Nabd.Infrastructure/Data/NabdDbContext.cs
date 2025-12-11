@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace Nabd.Infrastructure.Data
 {
-    // ✅ الوراثة من IdentityDbContext ضرورية
+
     public class NabdDbContext : IdentityDbContext<AppUser, Role, Guid>
     {
         public NabdDbContext(DbContextOptions<NabdDbContext> options) : base(options)
@@ -22,14 +22,14 @@ namespace Nabd.Infrastructure.Data
         }
 
         // =========================================================
-        // 1. الموديول الأساسي (Profiles)
+        // 1.  (Profiles)
         // =========================================================
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<DoctorDocument> DoctorDocuments { get; set; }
 
         // =========================================================
-        // 2. الموديول الطبي (Clinical)
+        // 2. ا (Clinical)
         // =========================================================
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ConsultationRecord> ConsultationRecords { get; set; }
@@ -37,51 +37,51 @@ namespace Nabd.Infrastructure.Data
         public DbSet<MedicalAttachment> MedicalAttachments { get; set; }
 
         // =========================================================
-        // 3. موديول العمليات (Operations)
+        // 3.(Operations)
         // =========================================================
         public DbSet<ClinicBranch> ClinicBranches { get; set; }
         public DbSet<DoctorSchedule> DoctorSchedules { get; set; }
 
         // =========================================================
-        // 4. موديول الصيدلية (Pharmacy)
+        // 4.(Pharmacy)
         // =========================================================
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
 
         // =========================================================
-        // 5. موديول الذكاء والتقييم (AI & Feedback)
+        // 5.  (AI & Feedback)
         // =========================================================
         public DbSet<DoctorReview> DoctorReviews { get; set; }
         public DbSet<AIDiagnosisLog> AIDiagnosisLogs { get; set; }
 
         // =========================================================
-        // 6. موديول النظام والأمان (System & Security)
+        // 6.  (System & Security)
         // =========================================================
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<SystemParameter> SystemParameters { get; set; }
 
         // =========================================================
-        // ضبط العلاقات (Fluent API)
+        // (Fluent API)
         // =========================================================
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder); // ⚠️ إجباري لـ Identity
+            base.OnModelCreating(builder); 
 
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             // -----------------------------------------------------
             // 1. علاقات الدكتور (Doctor)
             // -----------------------------------------------------
-            // حذف الدكتور -> يحذف الفروع (Cascade)
+     
             builder.Entity<Doctor>()
                 .HasMany(d => d.ClinicBranches)
                 .WithOne(b => b.Doctor)
                 .HasForeignKey(b => b.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // حذف الدكتور -> لا يحذف الروشتات (Restrict) حفاظاً على التاريخ الطبي
+           
             builder.Entity<Doctor>()
                 .HasMany(d => d.Prescriptions)
                 .WithOne(p => p.Doctor)
@@ -89,19 +89,18 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // -----------------------------------------------------
-            // 2. علاقات المريض (Patient)
+            // 2.(Patient)
             // -----------------------------------------------------
             builder.Entity<Patient>()
                 .HasIndex(p => p.NationalId).IsUnique();
 
-            // حذف المريض -> ممنوع لو عنده مواعيد (Restrict)
             builder.Entity<Patient>()
                 .HasMany(p => p.Appointments)
                 .WithOne(a => a.Patient)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // حذف المريض -> يحذف تاريخه المرضي (Cascade) لأنه خاص به فقط
+      
             builder.Entity<Patient>()
                 .HasMany(p => p.MedicalHistoryItems)
                 .WithOne(m => m.Patient)
@@ -109,17 +108,17 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // -----------------------------------------------------
-            // 3. علاقات الجداول والعيادات (Doctor Schedules) - حل مشكلة الـ Cycle
+            // 3. علاقات الجداول والعيادات 
             // -----------------------------------------------------
 
-            // الفرع هو المالك للجدول: حذف الفرع -> يحذف الجدول (Cascade)
+       
             builder.Entity<ClinicBranch>()
                 .HasMany(b => b.Schedules)
                 .WithOne(s => s.ClinicBranch)
                 .HasForeignKey(s => s.ClinicBranchId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ✅ التعديل الحاسم: جعل الحذف NoAction لمنع الدورة المغلقة
+
             builder.Entity<DoctorSchedule>()
                 .HasOne(s => s.Doctor)
                 .WithMany()
@@ -127,24 +126,23 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             // -----------------------------------------------------
-            // 4. علاقات التقييمات (Doctor Reviews) - حل مشكلة الـ Cycle الثانية
+            // 4. (Doctor Reviews) 
             // -----------------------------------------------------
 
-            // الموعد هو المالك للتقييم (Cascade)
+      
             builder.Entity<DoctorReview>()
                 .HasOne(r => r.Appointment)
                 .WithOne(a => a.DoctorReview)
                 .HasForeignKey<DoctorReview>(r => r.AppointmentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // كسر الـ Cycle مع الدكتور (NoAction)
+
             builder.Entity<DoctorReview>()
                 .HasOne(r => r.Doctor)
                 .WithMany(d => d.DoctorReviews)
                 .HasForeignKey(r => r.DoctorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // كسر الـ Cycle مع المريض (NoAction)
             builder.Entity<DoctorReview>()
                 .HasOne(r => r.Patient)
                 .WithMany(p => p.DoctorReviews)

@@ -4,7 +4,7 @@ namespace Nabd.Core.Enums.Identity
 {
     public enum DoctorDocumentType
     {
-        // Important for Verification (مستندات أساسية للتوثيق)
+        // Important for Verification 
         [Description("البطاقة الشخصية")]
         NationalId = 1,
 
@@ -20,7 +20,7 @@ namespace Nabd.Core.Enums.Identity
         [Description("شهادة التخصص")]
         SpecialtyCertificate = 5,
 
-        // Optional Professional Information (مستندات إضافية للبروفايل)
+        // Optional Professional Information 
         [Description("شهادات مهنية اضافية")]
         AdditionalCertificates = 6,
 

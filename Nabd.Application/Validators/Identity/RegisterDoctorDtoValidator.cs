@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Nabd.Application.DTOs.Identity;
+
 using Nabd.Core.DTOs;
 using System.Text.RegularExpressions;
 
@@ -10,7 +10,7 @@ namespace Nabd.Application.Validators.Identity
         public RegisterDoctorDtoValidator()
         {
             // ==========================================
-            // 1. Identity Info (بيانات الحساب)
+            // 1. Identity Info 
             // ==========================================
 
             RuleFor(x => x.FirstName)
@@ -26,8 +26,7 @@ namespace Nabd.Application.Validators.Identity
                 .NotEmpty().WithMessage("البريد الإلكتروني مطلوب.")
                 .EmailAddress().WithMessage("صيغة البريد الإلكتروني غير صحيحة.");
 
-            // كلمة المرور: (8 حروف، حرف كبير، حرف صغير، رقم، رمز خاص)
-            // لتتوافق مع إعدادات IdentityExtensions التي كتبناها
+  
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("كلمة المرور مطلوبة.")
                 .MinimumLength(8).WithMessage("كلمة المرور يجب أن لا تقل عن 8 خانات.")
@@ -36,13 +35,13 @@ namespace Nabd.Application.Validators.Identity
                 .Matches("[0-9]").WithMessage("يجب أن تحتوي على رقم واحد على الأقل.")
                 .Matches("[^a-zA-Z0-9]").WithMessage("يجب أن تحتوي على رمز خاص (مثل @, #, $).");
 
-            // رقم الهاتف المصري (يبدأ بـ 010, 011, 012, 015 ويتكون من 11 رقم)
+         
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("رقم الهاتف مطلوب.")
                 .Matches(@"^01[0125][0-9]{8}$").WithMessage("رقم الهاتف غير صحيح (يجب أن يكون رقم موبايل مصري مكون من 11 خانة).");
 
             // ==========================================
-            // 2. Professional Info (البيانات المهنية)
+            // 2. Professional Info 
             // ==========================================
 
             RuleFor(x => x.Specialization)
@@ -60,7 +59,7 @@ namespace Nabd.Application.Validators.Identity
                 .MaximumLength(1000).WithMessage("النبذة التعريفية لا يجب أن تتجاوز 1000 حرف.");
 
             // ==========================================
-            // 3. Clinic Info (بيانات العيادة المبدئية)
+            // 3. Clinic Info 
             // ==========================================
 
             RuleFor(x => x.ClinicName)

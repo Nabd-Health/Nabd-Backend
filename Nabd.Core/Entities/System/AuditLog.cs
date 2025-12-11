@@ -1,5 +1,5 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Enums; // عشان AuditType
+using Nabd.Core.Enums; 
 using System.ComponentModel.DataAnnotations;
 
 namespace Nabd.Core.Entities.System
@@ -10,52 +10,50 @@ namespace Nabd.Core.Entities.System
         // 1. Who? (الفاعل)
         // ==========================================
 
-        public required string UserId { get; set; } // مين عمل الحركة دي؟
+        public required string UserId { get; set; } 
 
         [MaxLength(100)]
-        public string? UserName { get; set; } // اسمه وقت العملية (Snapshot)
+        public string? UserName { get; set; } 
 
         [MaxLength(50)]
-        public string? UserRole { get; set; } // دوره كان إيه وقتها؟ (Doctor/Admin)
+        public string? UserRole { get; set; } 
 
         // ==========================================
-        // 2. What? (الحدث)
+        // 2. What? 
         // ==========================================
 
         [Required]
-        public required AuditType Action { get; set; } // (Create, Update, Delete, Login...)
+        public required AuditType Action { get; set; } 
 
         [Required]
         [MaxLength(100)]
-        public required string EntityName { get; set; } // اسم الجدول المتأثر (Doctor, Appointment)
-
+        public required string EntityName { get; set; } 
         [MaxLength(50)]
-        public string? PrimaryKey { get; set; } // ID الصف اللي اتعدل
+        public string? PrimaryKey { get; set; } 
 
         // ==========================================
-        // 3. How? (التفاصيل الجنائية)
+        // 3. How? 
         // ==========================================
 
-        // القيم القديمة قبل التعديل (JSON)
+
         public string? OldValues { get; set; }
 
-        // القيم الجديدة بعد التعديل (JSON)
+
         public string? NewValues { get; set; }
 
-        // أسماء الأعمدة اللي اتغيرت بس
         public string? AffectedColumns { get; set; }
 
         // ==========================================
-        // 4. Context (السياق الأمني)
+        // 4. Context 
         // ==========================================
 
         [MaxLength(50)]
-        public string? IpAddress { get; set; } // دخل منين؟
+        public string? IpAddress { get; set; } 
 
-        public string? UserAgent { get; set; } // نوع المتصفح/الجهاز
+        public string? UserAgent { get; set; } 
 
-        public string? TraceId { get; set; } // لتتبع العملية في الـ Logs (Correlation ID)
+        public string? TraceId { get; set; } 
 
-        public bool IsSuccess { get; set; } = true; // هل العملية نجحت ولا فشلت؟
+        public bool IsSuccess { get; set; } = true; 
     }
 }

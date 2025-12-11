@@ -19,28 +19,28 @@ namespace Nabd.Infrastructure.Repositories.Pharmacy
         {
             return await _dbSet
                 .Include(p => p.Doctor)
-                   .ThenInclude(d => d.ClinicBranches) // عشان نطبع عنوان العيادة في الروشتة
+                   .ThenInclude(d => d.ClinicBranches) 
                 .Include(p => p.Patient)
                 .Include(p => p.PrescriptionItems)
-                    .ThenInclude(pi => pi.Medication) // تفاصيل الدواء (الاسم، التركيز)
+                    .ThenInclude(pi => pi.Medication) 
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Prescription>> GetByPatientIdAsync(Guid patientId)
         {
             return await _dbSet
-                .Include(p => p.Doctor) // مين الدكتور اللي كتبها؟
+                .Include(p => p.Doctor) 
                 .Include(p => p.PrescriptionItems)
                     .ThenInclude(pi => pi.Medication)
                 .Where(p => p.PatientId == patientId)
-                .OrderByDescending(p => p.CreatedAt) // الأحدث أولاً
+                .OrderByDescending(p => p.CreatedAt) 
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Prescription>> GetByDoctorIdAsync(Guid doctorId)
         {
             return await _dbSet
-                .Include(p => p.Patient) // الروشتة دي لمين؟
+                .Include(p => p.Patient) 
                 .Where(p => p.DoctorId == doctorId)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
@@ -56,7 +56,7 @@ namespace Nabd.Infrastructure.Repositories.Pharmacy
 
         public async Task<IEnumerable<Prescription>> GetPrescriptionsContainingMedicationAsync(Guid medicationId)
         {
-            // بنستخدم Any عشان ندخل جوا الـ List بتاعة الـ Items
+  
             return await _dbSet
                 .Include(p => p.Doctor)
                 .Include(p => p.Patient)

@@ -43,10 +43,10 @@ namespace Nabd.Core.Entities.Profiles
         public double? Height { get; set; }
         public double? Weight { get; set; }
 
-        public string? ChronicDiseases { get; set; } // Text for AI
-        public string? Allergies { get; set; }       // Text for AI
+        public string? ChronicDiseases { get; set; } 
+        public string? Allergies { get; set; }      
 
-        public string? MedicalHistorySummary { get; set; } // NLP Summary
+        public string? MedicalHistorySummary { get; set; } 
 
         // Emergency & Insurance
         [MaxLength(100)]
@@ -62,7 +62,7 @@ namespace Nabd.Core.Entities.Profiles
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
         public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 
-        // القوائم المنقولة من شريان (للتفاصيل والتقييم)
+       
         public ICollection<MedicalHistoryItem> MedicalHistoryItems { get; set; } = new List<MedicalHistoryItem>();
         public ICollection<DoctorReview> DoctorReviews { get; set; } = new List<DoctorReview>();
         public ICollection<MedicalAttachment> MedicalAttachments { get; set; } = new List<MedicalAttachment>();

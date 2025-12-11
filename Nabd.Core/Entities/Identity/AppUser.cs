@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Nabd.Core.Entities.Identity; // RefreshToken
-using Nabd.Core.Entities.Profiles; // Doctor, Patient
+using Nabd.Core.Entities.Identity; 
+using Nabd.Core.Entities.Profiles; 
 using Nabd.Core.Enums.Identity;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nabd.Core.Entities.Identity
 {
-    // ✅ التعديل: الوراثة من IdentityUser<Guid>
+   
     public class AppUser : IdentityUser<Guid>
     {
         // ==========================================
@@ -54,7 +54,6 @@ namespace Nabd.Core.Entities.Identity
 
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
-        // ملاحظة: خصائص مثل Email, UserName, PasswordHash, PhoneNumber
-        // موجودة بالفعل داخل IdentityUser فمش محتاجين نكتبها تاني
+      
     }
 }

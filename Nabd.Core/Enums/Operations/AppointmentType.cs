@@ -8,7 +8,7 @@ namespace Nabd.Core.Enums.Operations
         ClinicVisit = 0,
 
         [Description("كشف أونلاين")]
-        VideoCall = 1,   // Telemedicine
+        VideoCall = 1,   
 
         [Description("استشارة / متابعة")]
         FollowUp = 2,

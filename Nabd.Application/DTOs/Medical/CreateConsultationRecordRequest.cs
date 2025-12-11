@@ -6,7 +6,7 @@ namespace Nabd.Application.DTOs.Medical
     public class CreateConsultationRecordRequest
     {
         // ==========================================
-        // 1. Linkage (الربط)
+        // 1. Linkage
         // ==========================================
         [Required(ErrorMessage = "رقم الموعد مطلوب.")]
         public Guid AppointmentId { get; set; }
@@ -17,17 +17,17 @@ namespace Nabd.Application.DTOs.Medical
 
         [Required(ErrorMessage = "الشكوى الرئيسية مطلوبة.")]
         [MaxLength(200, ErrorMessage = "الشكوى يجب ألا تزيد عن 200 حرف.")]
-        public required string ChiefComplaint { get; set; } // "صداع نصفي"
+        public required string ChiefComplaint { get; set; } 
 
         [Required(ErrorMessage = "تفاصيل الأعراض مطلوبة للتشخيص.")]
-        public required string Symptoms { get; set; } // "ألم في الجانب الأيمن يزداد مع الضوء..."
+        public required string Symptoms { get; set; } 
 
-        public string? HistoryOfPresentIllness { get; set; } // تاريخ المرض الحالي
+        public string? HistoryOfPresentIllness { get; set; } 
 
         // ==========================================
-        // 3. Objective Data (العلامات الحيوية - AI Features)
+        // 3. Objective Data ( AI Features)
         // ==========================================
-        // وضعنا Range Validation لمنع الأرقام غير المنطقية التي قد تربك الـ AI
+
 
         [Range(35, 42, ErrorMessage = "درجة الحرارة غير منطقية (35-42).")]
         public double? Temperature { get; set; }
@@ -53,19 +53,19 @@ namespace Nabd.Application.DTOs.Medical
         public string? PhysicalExaminationNotes { get; set; }
 
         // ==========================================
-        // 4. Assessment (التشخيص - AI Ground Truth)
+        // 4. Assessment 
         // ==========================================
 
-        public string? ProvisionalDiagnosis { get; set; } // التشخيص المبدئي
+        public string? ProvisionalDiagnosis { get; set; } 
 
         [Required(ErrorMessage = "التشخيص النهائي مطلوب لإغلاق الكشف.")]
-        public required string FinalDiagnosis { get; set; } // التشخيص المعتمد
+        public required string FinalDiagnosis { get; set; } 
 
         // ==========================================
-        // 5. Plan (الخطة)
+        // 5. Plan 
         // ==========================================
 
-        public string? TreatmentPlan { get; set; } // نصائح عامة (راحة، سوائل)
+        public string? TreatmentPlan { get; set; } 
 
         public DateTime? RecommendedFollowUpDate { get; set; }
     }

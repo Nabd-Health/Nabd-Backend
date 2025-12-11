@@ -37,25 +37,25 @@ namespace Nabd.Infrastructure.Seeders
 
         public async Task SeedAsync()
         {
-            // 1. التأكد من إنشاء قاعدة البيانات
-            // (في الإنتاج بنستخدم Migrations، بس هنا للتأكيد)
+            // 1
+ 
             await _context.Database.MigrateAsync();
 
-            // 2. Roles & Users (الأهم)
+            // 2. Roles & Users 
             await SeedRolesAsync();
             await SeedUsersAndProfilesAsync();
 
-            // 3. System Data (Lookups)
+            // 3. System Data 
             await SeedSystemParametersAsync();
             await SeedMedicationsAsync();
 
-            // 4. Operations Data (Dependent on Doctors)
+            // 4. Operations Data 
             if (await _context.Doctors.AnyAsync())
             {
                 await SeedClinicBranchesAsync();
             }
 
-            // حفظ التغييرات النهائية
+     
             await _context.SaveChangesAsync();
         }
 
@@ -117,7 +117,7 @@ namespace Nabd.Infrastructure.Seeders
             {
                 await _userManager.AddToRoleAsync(doctorUser, "Doctor");
 
-                // إنشاء البروفايل فوراً
+               
                 var doctorProfile = new Doctor
                 {
                     AppUserId = doctorUser.Id,
@@ -126,7 +126,7 @@ namespace Nabd.Infrastructure.Seeders
                     Specialization = MedicalSpecialty.Cardiology,
                     Bio = "Expert Cardiologist with 10 years of experience.",
                     ConsultationFee = 500,
-                    Status = DoctorStatus.Active, // مفعل جاهز
+                    Status = DoctorStatus.Active, 
                     VerifiedAt = DateTime.UtcNow,
                     IsAvailable = true
                 };
@@ -225,7 +225,7 @@ namespace Nabd.Infrastructure.Seeders
         {
             if (await _context.ClinicBranches.AnyAsync()) return;
 
-            // هنجيب الدكتور اللي لسه عاملينه
+        
             var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.AppUser.Email == "dr.seif@nabd.com");
             if (doctor == null) return;
 

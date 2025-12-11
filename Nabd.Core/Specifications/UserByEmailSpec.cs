@@ -14,11 +14,10 @@ namespace Nabd.Core.Specifications
         {
             ApplyPaging(0, 1);
 
-            // جلب البروفايلات في نفس الكويري لتجنب N+1 Problem
             AddInclude(u => u.DoctorProfile!);
             AddInclude(u => u.PatientProfile!);
 
-            // جلب RefreshTokens فقط أثناء عملية Login/RenewToken
+           
             if (includeRefreshTokens)
             {
                 AddInclude(u => u.RefreshTokens);

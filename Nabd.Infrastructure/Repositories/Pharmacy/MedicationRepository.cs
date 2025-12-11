@@ -21,14 +21,13 @@ namespace Nabd.Infrastructure.Repositories.Pharmacy
 
             var lowerTerm = term.ToLower();
 
-            // بنبحث في الاسم التجاري والمادة الفعالة
-            // وبنتأكد إن الدواء IsActive
+      
             return await _dbSet
                 .Where(m => m.IsActive &&
                            (m.TradeName.ToLower().Contains(lowerTerm) ||
                             m.ScientificName.ToLower().Contains(lowerTerm)))
-                .OrderBy(m => m.TradeName) // ترتيب أبجدي
-                .Take(20) // نرجع أول 20 نتيجة بس عشان الأداء
+                .OrderBy(m => m.TradeName) 
+                .Take(20) 
                 .ToListAsync();
         }
 
@@ -42,7 +41,7 @@ namespace Nabd.Infrastructure.Repositories.Pharmacy
         {
             return await _dbSet
                 .Where(m => m.IsActive)
-                // هنا بنرتب حسب عدد مرات ظهوره في جدول PrescriptionItems
+          
                 .OrderByDescending(m => m.PrescriptionItems.Count)
                 .Take(topCount)
                 .ToListAsync();

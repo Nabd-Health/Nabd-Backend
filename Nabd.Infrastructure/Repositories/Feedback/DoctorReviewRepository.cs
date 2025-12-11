@@ -17,9 +17,9 @@ namespace Nabd.Infrastructure.Repositories.Feedback
 
         public async Task<IEnumerable<DoctorReview>> GetByDoctorIdAsync(Guid doctorId)
         {
-            // جلب التقييمات للدكتور، مرتبة من الأحدث للأقدم، مع بيانات المريض
+           
             return await _dbSet
-                .Include(r => r.Patient) // نحتاج بيانات المريض لعرض الاسم والصورة بجانب التقييم
+                .Include(r => r.Patient) 
                 .Where(r => r.DoctorId == doctorId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
@@ -44,9 +44,7 @@ namespace Nabd.Infrastructure.Repositories.Feedback
 
         public async Task<double> CalculateAverageRatingAsync(Guid doctorId)
         {
-            // بما أن AverageRating هي Computed Property (C# only)
-            // نقوم بكتابة معادلة الحساب داخل LINQ ليقوم EF Core بترجمتها لـ SQL
-            // هذا أسرع بكثير من جلب البيانات للذاكرة وحسابها
+        
 
             var ratingsQuery = _dbSet.Where(r => r.DoctorId == doctorId);
 

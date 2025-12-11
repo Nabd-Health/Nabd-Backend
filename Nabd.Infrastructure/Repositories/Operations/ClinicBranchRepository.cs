@@ -20,7 +20,7 @@ namespace Nabd.Infrastructure.Repositories.Operations
         public async Task<IEnumerable<ClinicBranch>> GetBranchesByDoctorIdAsync(Guid doctorId)
         {
             return await _dbSet
-                .Include(b => b.Schedules) // نحتاج المواعيد عشان نعرضها في كارت الفرع
+                .Include(b => b.Schedules) 
                 .Where(b => b.DoctorId == doctorId)
                 .OrderBy(b => b.Name)
                 .ToListAsync();
@@ -28,16 +28,14 @@ namespace Nabd.Infrastructure.Repositories.Operations
 
         public async Task<IEnumerable<ClinicBranch>> GetBranchesNearLocationAsync(double latitude, double longitude, double radiusInKm)
         {
-            // 1. نجلب الفروع التي لها إحداثيات مسجلة فقط
-            // ملاحظة: الحسابات الجغرافية المعقدة في SQL تحتاج مكتبات خاصة (Spatial Types)
-            // للتبسيط والأداء الجيد للبيانات المتوسطة، نجلب الفروع النشطة ثم نحسب المسافة في الـ Memory
+         
 
             var branches = await _dbSet
-                .Include(b => b.Doctor) // عشان نعرض اسم الدكتور
+                .Include(b => b.Doctor) 
                 .Where(b => b.IsActive && b.Latitude != null && b.Longitude != null)
                 .ToListAsync();
 
-            // 2. تصفية النتائج بناءً على المسافة (Haversine Formula)
+          
             return branches
                 .Where(b => CalculateDistance(latitude, longitude, b.Latitude!.Value, b.Longitude!.Value) <= radiusInKm)
                 .ToList();
@@ -47,7 +45,7 @@ namespace Nabd.Infrastructure.Repositories.Operations
         {
             return await _dbSet
                 .Include(b => b.Doctor)
-                    .ThenInclude(d => d.AppUser) // عشان نعرض اسم الدكتور وصورته
+                    .ThenInclude(d => d.AppUser) 
                 .Where(b => b.IsActive && b.Governorate == governorate)
                 .ToListAsync();
         }
@@ -56,17 +54,17 @@ namespace Nabd.Infrastructure.Repositories.Operations
         {
             return await _dbSet
                 .Include(b => b.Doctor)
-                    .ThenInclude(d => d.AppUser) // بيانات الدكتور الشخصية
-                .Include(b => b.Schedules.OrderBy(s => s.DayOfWeek)) // جدول المواعيد مرتب
+                    .ThenInclude(d => d.AppUser) 
+                .Include(b => b.Schedules.OrderBy(s => s.DayOfWeek)) 
                 .FirstOrDefaultAsync(b => b.Id == clinicBranchId);
         }
 
         // =========================================================
-        // Private Helper: Haversine Formula (حساب المسافة بالكيلومتر)
+        // Private Helper: Haversine Formula 
         // =========================================================
         private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
-            var R = 6371; // نصف قطر الأرض بالكيلومتر
+            var R = 6371; 
             var dLat = ToRadians(lat2 - lat1);
             var dLon = ToRadians(lon2 - lon1);
 

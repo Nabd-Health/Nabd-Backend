@@ -3,7 +3,7 @@ using System;
 
 namespace Nabd.Core.Entities.Identity
 {
-    // كلاس الأدوار (يرث من IdentityRole لتوافق مع ASP.NET Identity)
+    
     public class Role : IdentityRole<Guid>
     {
         public Role() : base() { }

@@ -1,16 +1,15 @@
 ﻿namespace Nabd.Core.Settings
 {
-    // إعدادات Paymob (بوابة الدفع المصرية)
+
     public class PaymobSettings
     {
-        // المفاتيح الأمنية
+        
         public string APIKey { get; set; } = string.Empty;
         public string PublicKey { get; set; } = string.Empty;
         public string SecretKey { get; set; } = string.Empty;
-        public string HMAC { get; set; } = string.Empty; // للتحقق من سلامة رسائل الدفع
+        public string HMAC { get; set; } = string.Empty; 
 
-        // IDs الخاصة بالـ Integration والـ IFrame
-        // (قد يتم استخدام Card/Mobile لدفع رسوم المواعيد)
+        
         public string CardIntegrationId { get; set; } = string.Empty;
         public string MobileIntegrationId { get; set; } = string.Empty;
         public string CardIFrameId { get; set; } = string.Empty;

@@ -10,19 +10,19 @@ namespace Nabd.Core.Entities.Base
         public Guid Id { get; set; } = Guid.NewGuid();
 
         // ==========================================
-        // 2. Auditing (من شريان - AuditableEntity)
+        // 2. Auditing 
         // ==========================================
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public string? CreatedBy { get; set; } // خليناها String عشان تمشي مع الـ JWT Claims
+        public string? CreatedBy { get; set; } 
 
         public DateTime? UpdatedAt { get; set; }
 
         public string? UpdatedBy { get; set; }
 
         // ==========================================
-        // 3. Soft Delete (من شريان - SoftDeletableEntity)
+        // 3. Soft Delete (SoftDeletableEntity)
         // ==========================================
 
         public bool IsDeleted { get; set; } = false;
@@ -32,7 +32,7 @@ namespace Nabd.Core.Entities.Base
         public string? DeletedBy { get; set; }
 
         // ==========================================
-        // 4. Concurrency (إضافة نبض - احترافية)
+        // 4. Concurrency
         // ==========================================
 
         // ده بيمنع تضارب البيانات (Optimistic Concurrency)

@@ -7,15 +7,15 @@ namespace Nabd.Core.Entities.System
     {
         [Required]
         [MaxLength(100)]
-        public required string Key { get; set; } // مفتاح الإعداد (مثال: "MaxDailyAppointments")
+        public required string Key { get; set; } 
 
         [Required]
         [MaxLength(500)]
-        public required string Value { get; set; } // القيمة (مثال: "50")
+        public required string Value { get; set; } 
 
         [MaxLength(200)]
-        public string? Description { get; set; } // شرح للإعداد (عشان الأدمن يفهم ده بيعمل إيه)
+        public string? Description { get; set; } 
 
-        public string? Group { get; set; } // لتجميع الإعدادات (مثال: "AI_Settings", "Finance")
+        public string? Group { get; set; } 
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Profiles; // Doctor & Patient
-using Nabd.Core.Entities.Feedback; // DoctorReview
+using Nabd.Core.Entities.Profiles; 
+using Nabd.Core.Entities.Feedback; 
 using Nabd.Core.Enums.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +10,7 @@ namespace Nabd.Core.Entities.Medical
     public class Appointment : BaseEntity
     {
         // ==========================================
-        // 1. The Parties (أطراف الموعد)
+        // 1. The Parties 
         // ==========================================
 
         public Guid DoctorId { get; set; }
@@ -20,48 +20,48 @@ namespace Nabd.Core.Entities.Medical
         public Patient Patient { get; set; } = null!;
 
         // ==========================================
-        // 2. Schedule & Timing (التوقيت)
+        // 2. Schedule & Timing 
         // ==========================================
 
-        public DateTime AppointmentDate { get; set; } // وقت بداية الموعد
+        public DateTime AppointmentDate { get; set; } 
 
         public int EstimatedDurationMinutes { get; set; } = 30;
 
-        // وقت الوصول الفعلي (عشان نحسب وقت الانتظار Waiting Time - مهم للجودة)
+
         public DateTime? ActualArrivalDate { get; set; }
 
         // ==========================================
-        // 3. Follow-up Logic (سلسلة المتابعة - من شريان)
+        // 3. Follow-up Logic 
         // ==========================================
 
-        // لو الموعد ده "متابعة" (FollowUp)، لازم نعرف هو متابعة لأنهي كشف أصلي؟
+       
         public Guid? PreviousAppointmentId { get; set; }
         public Appointment? PreviousAppointment { get; set; }
 
         // ==========================================
-        // 4. Status & Lifecycle (دورة الحياة)
+        // 4. Status & Lifecycle 
         // ==========================================
 
         public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;
 
-        // تفاصيل الإلغاء (لتحليل أسباب إلغاء الحجوزات)
+     
         public string? CancellationReason { get; set; }
-        public bool CancelledByPatient { get; set; } // true = patient, false = clinic
+        public bool CancelledByPatient { get; set; } 
 
         // ==========================================
-        // 5. Appointment Context (تفاصيل الكشف)
+        // 5. Appointment Context 
         // ==========================================
 
         public AppointmentType Type { get; set; } = AppointmentType.ClinicVisit;
 
         [MaxLength(500)]
-        public string? ReasonForVisit { get; set; } // الشكوى المبدئية
+        public string? ReasonForVisit { get; set; } 
 
         [MaxLength(500)]
-        public string? AdministrativeNotes { get; set; } // ملاحظات السكرتارية
+        public string? AdministrativeNotes { get; set; } 
 
         // ==========================================
-        // 6. Financials (الماليات)
+        // 6. Financials 
         // ==========================================
 
         [Column(TypeName = "decimal(18,2)")]
@@ -71,13 +71,13 @@ namespace Nabd.Core.Entities.Medical
         public string? PaymentTransactionId { get; set; }
 
         // ==========================================
-        // 7. Outcomes (النتائج)
+        // 7. Outcomes 
         // ==========================================
 
-        // الكشف الطبي الناتج عن هذا الموعد (One-to-One)
+      
         public ConsultationRecord? ConsultationRecord { get; set; }
 
-        // تقييم المريض لهذا الموعد تحديداً (من شريان)
+        
         public DoctorReview? DoctorReview { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Nabd.Core.Enums.Medical
 {
-    // أنواع السجلات التي تظهر في الخط الزمني للمريض
+    
     public enum HistoryEventType
     {
         [Description("كشف طبي")]
@@ -21,9 +21,9 @@ namespace Nabd.Core.Enums.Medical
         Vaccination = 5,
 
         [Description("تنبيه طبي")]
-        Alert = 6,          // (حساسية أو مرض مزمن)
+        Alert = 6,         
 
         [Description("عملية جراحية")]
-        Surgery = 7         // (إضافة Enterprise)
+        Surgery = 7        
     }
 }

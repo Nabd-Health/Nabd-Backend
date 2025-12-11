@@ -1,6 +1,6 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Profiles; // Doctor
-using Nabd.Core.Enums;            // Governorate
+using Nabd.Core.Entities.Profiles; 
+using Nabd.Core.Enums;            
 using Nabd.Core.Enums.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,51 +10,51 @@ namespace Nabd.Core.Entities.Operations
     public class ClinicBranch : BaseEntity
     {
         // ==========================================
-        // 1. Linkage (التبعية)
+        // 1. Linkage 
         // ==========================================
 
         public Guid DoctorId { get; set; }
         public virtual required Doctor Doctor { get; set; }
 
         // ==========================================
-        // 2. Branch Identity (بيانات الفرع)
+        // 2. Branch Identity
         // ==========================================
 
         [Required]
         [MaxLength(100)]
-        public required string Name { get; set; } // مثال: "فرع الزقازيق - القومية"
+        public required string Name { get; set; } 
 
         [Required]
         [Phone]
-        public required string PhoneNumber { get; set; } // الرقم الرئيسي للحجز
+        public required string PhoneNumber { get; set; } 
 
-        public string? LandlineNumber { get; set; } // رقم أرضي (اختياري)
+        public string? LandlineNumber { get; set; } 
 
         // ==========================================
-        // 3. Location Details (منقول ومطور من Address.cs)
+        // 3. Location Details
         // ==========================================
-        // دمجنا جدول العنوان هنا (Flattening) عشان الأداء يبقى طيارة
+        
 
-        public required Governorate Governorate { get; set; } // المحافظة (Enum) للفلترة
+        public required Governorate Governorate { get; set; } 
 
         [Required]
         [MaxLength(50)]
-        public required string City { get; set; } // المدينة/الحي (مثال: "حي الزهور")
+        public required string City { get; set; } 
 
         [Required]
         [MaxLength(200)]
-        public required string StreetAddress { get; set; } // الشارع ورقم العمارة
+        public required string StreetAddress { get; set; } 
 
-        // الخريطة (مهم جداً للـ Mobile App)
+      
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public string? GoogleMapLink { get; set; }
 
         // ==========================================
-        // 4. Financials (تخصيص السعر)
+        // 4. Financials 
         // ==========================================
 
-        // لو الدكتور عايز يخلي الفرع ده أغلى من العادي
+   
         [Column(TypeName = "decimal(18,2)")]
         public decimal? CustomConsultationFee { get; set; }
 
@@ -64,7 +64,7 @@ namespace Nabd.Core.Entities.Operations
 
         public bool IsActive { get; set; } = true;
 
-        // مواعيد العمل في الفرع ده
+     
         public virtual ICollection<DoctorSchedule> Schedules { get; set; } = new List<DoctorSchedule>();
     }
 }

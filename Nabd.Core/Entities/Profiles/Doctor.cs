@@ -15,13 +15,13 @@ namespace Nabd.Core.Entities.Profiles
     public class Doctor : BaseEntity
     {
         // ==========================================
-        // 1. Identity Link (الربط بالحساب)
+        // 1. Identity Link 
         // ==========================================
         public Guid AppUserId { get; set; }
         public required AppUser AppUser { get; set; }
 
         // ==========================================
-        // 2. Personal Info (البيانات الشخصية)
+        // 2. Personal Info 
         // ==========================================
         [Required]
         [MaxLength(100)]
@@ -36,27 +36,27 @@ namespace Nabd.Core.Entities.Profiles
 
         public string? Address { get; set; }
 
-        public string? City { get; set; } // للمساعدة في الفلترة (Governorate)
+        public string? City { get; set; } 
 
         public string? ProfilePictureUrl { get; set; }
 
         // ==========================================
-        // 3. Professional Info (البيانات المهنية)
+        // 3. Professional Info 
         // ==========================================
 
         [Required]
-        // تم التحديث لاستخدام Enum بدلاً من string لسهولة الفلترة والـ AI
+      
         public MedicalSpecialty Specialization { get; set; }
 
-        [MaxLength(1500)] // زودنا المساحة عشان يكتب براحته
+        [MaxLength(1500)] 
         public string? Bio { get; set; }
 
-        public string? MedicalLicenseNumber { get; set; } // رقم الترخيص
+        public string? MedicalLicenseNumber { get; set; } 
         public string? GraduationUniversity { get; set; }
         public int YearsOfExperience { get; set; }
 
         // ==========================================
-        // 4. Clinic & Financials (العيادة والماليات)
+        // 4. Clinic & Financials
         // ==========================================
 
         [Column(TypeName = "decimal(18,2)")]
@@ -71,34 +71,32 @@ namespace Nabd.Core.Entities.Profiles
         public DoctorStatus Status { get; set; } = DoctorStatus.Pending;
         public bool IsAvailable { get; set; } = true;
 
-        // تاريخ التوثيق (مهم للأمان)
+    
         public DateTime? VerifiedAt { get; set; }
 
         // ==========================================
-        // 6. Statistics (إحصائيات الأداء)
+        // 6. Statistics
         // ==========================================
         public double AverageRating { get; set; } = 0.0;
         public int TotalReviews { get; set; } = 0;
 
         // ==========================================
-        // 7. Relationships (العلاقات)
+        // 7. Relationships
         // ==========================================
 
-        // المواعيد
+    
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
-        // الفروع (بديل Clinic في الكود القديم)
+       
         public ICollection<ClinicBranch> ClinicBranches { get; set; } = new List<ClinicBranch>();
 
-        // الروشتات (تم دمج LabPrescription هنا كنوع من الروشتات أو في PrescriptionItems)
+
         public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 
-        // [جديد] التقييمات (منقول من شريان)
-        // (سيحتاج إنشاء ملف DoctorReview.cs)
+ 
         public ICollection<DoctorReview> DoctorReviews { get; set; } = new List<DoctorReview>();
 
-        // [جديد] وثائق التوثيق (منقول من شريان)
-        // (سيحتاج إنشاء ملف DoctorDocument.cs)
+       
         public ICollection<DoctorDocument> VerificationDocuments { get; set; } = new List<DoctorDocument>();
     }
 }

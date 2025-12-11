@@ -11,7 +11,7 @@ namespace Nabd.Core.Enums.Operations
         LabResult = 1,
 
         [Description("أشعة")]
-        Radiology = 2,      // (Computer Vision Target)
+        Radiology = 2,      
 
         [Description("روشتة خارجية")]
         Prescription = 3,

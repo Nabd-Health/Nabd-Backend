@@ -5,18 +5,18 @@ namespace Nabd.Core.Enums.Identity
     public enum UserType
     {
         [Description("غير محدد")]
-        Unknown = 0,        // قيمة افتراضية للأمان
+        Unknown = 0,        
 
         [Description("مدير النظام")]
-        Admin = 1,          // Admin
+        Admin = 1,         
 
         [Description("طبيب")]
-        Doctor = 2,         // Service Provider
+        Doctor = 2,         
 
         [Description("مريض")]
-        Patient = 3,        // Consumer
+        Patient = 3,        
 
         [Description("فاحص الطبيب")]
-        Verifier = 4        // لمراجعة التراخيص (Enterprise Feature)
+        Verifier = 4        
     }
 }

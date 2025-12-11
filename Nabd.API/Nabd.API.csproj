@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Nabd.Shared\Nabd.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>

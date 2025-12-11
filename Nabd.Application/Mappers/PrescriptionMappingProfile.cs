@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Nabd.Application.DTOs.Pharmacy; // DTOs
-using Nabd.Core.Entities.Pharmacy;    // Entities
-using Nabd.Core.Enums;                // PrescriptionStatus
+using Nabd.Application.DTOs.Pharmacy;
+using Nabd.Core.Entities.Pharmacy;    
+using Nabd.Core.Enums;               
 using System;
 
 namespace Nabd.Application.Mappers
@@ -11,7 +11,7 @@ namespace Nabd.Application.Mappers
         public PrescriptionMappingProfile()
         {
             // ==========================================
-            // I. Prescription Mappings (الروشتة)
+            // I. Prescription Mappings 
             // ==========================================
 
             // 1. Entity -> Response DTO
@@ -20,42 +20,43 @@ namespace Nabd.Application.Mappers
                     src.Doctor != null ? src.Doctor.FullName : string.Empty))
                 .ForMember(dest => dest.PatientName, opt => opt.MapFrom(src =>
                     src.Patient != null ? src.Patient.FullName : string.Empty))
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.PrescriptionItems)); // ربط قائمة الأدوية
+              
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.PrescriptionItems));
 
             // 2. Request DTO -> Entity
             CreateMap<CreatePrescriptionRequest, Prescription>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => PrescriptionStatus.Active)) // الحالة الافتراضية
-                .ForMember(dest => dest.UniqueCode, opt => opt.Ignore()) // يتم توليده في الـ Service
+             
+
+                .ForMember(dest => dest.PrescriptionItems, opt => opt.MapFrom(src => src.Items))
+
                 .ForMember(dest => dest.IssueDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-            // (تم تعليق UpdatePrescriptionRequest مؤقتاً لعدم وجود DTO)
-            // CreateMap<UpdatePrescriptionRequest, Prescription>()
-            //    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // ==========================================
-            // II. Prescription Item Mappings (عناصر الروشتة)
+            // II. Prescription Item Mappings 
             // ==========================================
 
-            // 3. Entity -> Response DTO (PrescriptionItemDto)
+            // 3. Entity -> Response DTO 
             CreateMap<PrescriptionItem, PrescriptionItemDto>()
                 .ForMember(dest => dest.MedicationName, opt => opt.MapFrom(src => src.Medication.TradeName))
                 .ForMember(dest => dest.ScientificName, opt => opt.MapFrom(src => src.Medication.ScientificName))
                 .ForMember(dest => dest.Strength, opt => opt.MapFrom(src => src.Medication.Strength))
                 .ForMember(dest => dest.Form, opt => opt.MapFrom(src => src.Medication.Form.ToString()));
 
-            // 4. Request DTO -> Entity (CreatePrescriptionItemDto)
+            // 4. Request DTO -> Entity 
             CreateMap<CreatePrescriptionItemDto, PrescriptionItem>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.MedicationId, opt => opt.MapFrom(src => src.MedicationId))
+   
+                ;
 
             // ==========================================
-            // III. Medication Mappings (البحث عن الأدوية)
+            // III. Medication Mappings 
             // ==========================================
 
-            // 5. Entity -> DTO (MedicationDto)
+            // 5. Entity -> DTO
             CreateMap<Medication, MedicationDto>()
                 .ForMember(dest => dest.Form, opt => opt.MapFrom(src => src.Form.ToString()));
-
-            // (تم حذف CreateMedicationRequest لأننا لن ندير مخزون الأدوية في نبض، سنكتفي بالبحث)
         }
     }
 }

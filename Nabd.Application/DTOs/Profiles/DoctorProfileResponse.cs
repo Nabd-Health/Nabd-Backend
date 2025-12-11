@@ -1,12 +1,10 @@
-﻿using Nabd.Application.DTOs.Operations; // لاستخدام ClinicBranchResponse
+﻿using Nabd.Application.DTOs.Operations; 
 using System;
 using System.Collections.Generic;
 
 namespace Nabd.Application.DTOs.Profiles
 {
-    /// <summary>
-    /// البروفايل العام للطبيب كما يظهر للمريض في نتائج البحث أو صفحة التفاصيل
-    /// </summary>
+   
     public class DoctorProfileResponse
     {
         public Guid Id { get; set; }
@@ -14,27 +12,27 @@ namespace Nabd.Application.DTOs.Profiles
         // ==========================================
         // 1. Identity & Professional Info
         // ==========================================
-        public string FullName { get; set; } = string.Empty; // "د. أحمد محمد"
+        public string FullName { get; set; } = string.Empty;
         public string? ProfilePictureUrl { get; set; }
-        public string? Bio { get; set; } // النبذة التعريفية
+        public string? Bio { get; set; } 
 
-        public string Specialization { get; set; } = string.Empty; // "Cardiology" (Description)
+        public string Specialization { get; set; } = string.Empty; 
         public int YearsOfExperience { get; set; }
 
         // ==========================================
-        // 2. Status & Quality (الجودة)
+        // 2. Status & Quality 
         // ==========================================
-        public bool IsVerified { get; set; } // العلامة الزرقاء
-        public double AverageRating { get; set; } // 4.8
-        public int TotalReviews { get; set; } // (150 Review)
+        public bool IsVerified { get; set; } 
+        public double AverageRating { get; set; } 
+        public int TotalReviews { get; set; } 
 
         // ==========================================
-        // 3. Operational Info (للحجز)
+        // 3. Operational Info
         // ==========================================
-        public decimal ConsultationFee { get; set; } // السعر المبدئي (Base Fee)
+        public decimal ConsultationFee { get; set; } 
         public int SessionDurationMinutes { get; set; }
 
-        // قائمة الفروع المتاحة لهذا الطبيب (عشان المريض يختار أقرب فرع)
+
         public List<ClinicBranchResponse> Branches { get; set; } = new();
     }
 }

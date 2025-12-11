@@ -8,15 +8,15 @@ namespace Nabd.Application.DTOs.Pharmacy
         public Guid Id { get; set; }
 
         // ==========================================
-        // 1. Identification (الهوية)
+        // 1. Identification 
         // ==========================================
-        public string UniqueCode { get; set; } = string.Empty; // كود الروشتة (RX-...)
+        public string UniqueCode { get; set; } = string.Empty; 
         public DateTime IssueDate { get; set; }
-        public DateTime? ExpiryDate { get; set; } // صلاحية الصرف
-        public string Status { get; set; } = string.Empty; // "Active", "Dispensed", "Expired"
+        public DateTime? ExpiryDate { get; set; }
+        public string Status { get; set; } = string.Empty; 
 
         // ==========================================
-        // 2. Context (الأطراف)
+        // 2. Context 
         // ==========================================
         public Guid DoctorId { get; set; }
         public string DoctorName { get; set; } = string.Empty;
@@ -24,20 +24,20 @@ namespace Nabd.Application.DTOs.Pharmacy
         public Guid PatientId { get; set; }
         public string PatientName { get; set; } = string.Empty;
 
-        public Guid ConsultationRecordId { get; set; } // للعودة للكشف المرتبط
+        public Guid ConsultationRecordId { get; set; } 
 
         // ==========================================
-        // 3. Clinical Content (المحتوى الطبي)
+        // 3. Clinical Content 
         // ==========================================
-        public string? Notes { get; set; } // تعليمات عامة
+        public string? Notes { get; set; } 
 
-        // قائمة الأدوية (تستخدم DTO الذي أنشأناه سابقاً)
+   
         public List<PrescriptionItemDto> Items { get; set; } = new();
 
         // ==========================================
-        // 4. AI & Safety (الأمان)
+        // 4. AI & Safety 
         // ==========================================
-        public bool IsReviewedByAI { get; set; } // هل مرت على الموديل؟
-        public bool HasSafetyAlerts { get; set; } // هل فيها تحذيرات؟ (لعرض علامة خطر)
+        public bool IsReviewedByAI { get; set; } 
+        public bool HasSafetyAlerts { get; set; } 
     }
 }

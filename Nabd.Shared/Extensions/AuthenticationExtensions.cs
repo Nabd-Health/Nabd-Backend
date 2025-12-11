@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Nabd.Shared.Configurations; // استخدام الـ Namespace الجديد
+using Nabd.Shared.Configurations; 
 
 namespace Nabd.Shared.Extensions
 {
@@ -21,12 +21,12 @@ namespace Nabd.Shared.Extensions
                 throw new InvalidOperationException("إعدادات JWT غير موجودة أو غير صالحة. يرجى التحقق من appsettings.json");
             }
 
-            // تسجيل الإعدادات للـ Dependency Injection
+            //  Dependency Injection
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
 
-            // 2. إعداد خدمة المصادقة (Authentication)
+            // 2.  (Authentication)
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,7 +36,7 @@ namespace Nabd.Shared.Extensions
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false; // يفضل true في الإنتاج (Production)
+                options.RequireHttpsMetadata = false; 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = jwtSettings.ValidateIssuer,
@@ -49,7 +49,7 @@ namespace Nabd.Shared.Extensions
                     ClockSkew = TimeSpan.FromMinutes(jwtSettings.ClockSkewMinutes)
                 };
 
-                // 3. أحداث مخصصة للتشخيص (Logging & Debugging)
+                // 3.  (Logging & Debugging)
                 options.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = context =>
@@ -67,22 +67,22 @@ namespace Nabd.Shared.Extensions
         }
 
         // ==========================================
-        // Authorization Policies (تحديد الصلاحيات)
+        // Authorization Policies 
         // ==========================================
         public static IServiceCollection AddAuthorizationPolicies(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
-                // السياسات الأساسية لـ "نبض"
+                
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
                 options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
                 options.AddPolicy("VerifierOnly", policy => policy.RequireRole("Verifier"));
 
-                // السياسات المركبة (Combined Policies)
+             
                 options.AddPolicy("AdminOrVerifier", policy => policy.RequireRole("Admin", "Verifier"));
 
-                // [تم الحذف]: LaboratoryOnly, PharmacyOnly, HealthcareProvider
+         
             });
 
             return services;

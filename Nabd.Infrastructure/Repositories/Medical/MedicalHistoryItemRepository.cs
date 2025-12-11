@@ -19,9 +19,9 @@ namespace Nabd.Infrastructure.Repositories.Medical
         public async Task<IEnumerable<MedicalHistoryItem>> GetByPatientIdAsync(Guid patientId)
         {
             return await _dbSet
-                // لا نحتاج لعمل Include(Patient) هنا لأننا غالباً نكون في صفحة المريض بالفعل
+                
                 .Where(mhi => mhi.PatientId == patientId)
-                // التعديل: الترتيب حسب تاريخ الحدث (الأحدث فالأقدم) لبناء Timeline طبي سليم
+               
                 .OrderByDescending(mhi => mhi.EventDate)
                 .ToListAsync();
         }

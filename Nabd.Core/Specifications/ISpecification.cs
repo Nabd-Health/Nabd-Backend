@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nabd.Core.Specifications
 {
-    // ⚠️ هذا هو التعريف الصحيح الذي يجب أن يكون generic
+    
     public interface ISpecification<T>
     {
         Expression<Func<T, bool>> Criteria { get; }

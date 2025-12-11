@@ -5,12 +5,12 @@ namespace Nabd.Core.Enums
     public enum AIRequestType
     {
         [Description("مساعد التشخيص")]
-        Diagnosis = 1,          // موديل التشخيص (Diagnosis Aid)
+        Diagnosis = 1,         
 
         [Description("مراجعة الروشتة")]
-        PrescriptionCheck = 2,  // موديل مراجعة الروشتة (Prescription Analyzer)
+        PrescriptionCheck = 2,  
 
         [Description("اقتراح تحاليل")]
-        LabRecommendation = 3   // موديل اقتراح التحاليل الذكي
+        LabRecommendation = 3   
     }
 }

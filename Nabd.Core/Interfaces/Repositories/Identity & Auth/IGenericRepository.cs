@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nabd.Core.Interfaces.Repositories.Base
 {
-    // التغيير المهم: where T : class (عشان يقبل IdentityUser و BaseEntity)
+    
     public interface IGenericRepository<T> where T : class
     {
         Task<T?> GetByIdAsync(Guid id);

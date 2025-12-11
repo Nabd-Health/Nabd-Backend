@@ -25,8 +25,7 @@ namespace Nabd.Infrastructure.Repositories.AI
 
         public async Task<IEnumerable<AIDiagnosisLog>> GetLogsForRetrainingAsync()
         {
-            // نختار السجلات التي قام الطبيب بتقييمها (سواء صح أو خطأ)
-            // لأننا نحتاج الـ Ground Truth (رأي الطبيب) للتدريب
+   
             return await _dbSet
                 .Where(log => log.WasCorrect.HasValue && log.DoctorCorrection != null)
                 .OrderByDescending(log => log.LoggedAt)

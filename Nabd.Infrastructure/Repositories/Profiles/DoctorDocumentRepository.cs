@@ -26,12 +26,12 @@ namespace Nabd.Infrastructure.Repositories.Profiles
 
         public async Task<IEnumerable<DoctorDocument>> GetPendingDocumentsAsync()
         {
-            // "قيد الانتظار" تعني أنها لم توثق بعد، ولم يتم رفضها (لا يوجد سبب رفض)
+            
             return await _dbSet
                 .Include(d => d.Doctor)
-                    .ThenInclude(doc => doc.AppUser) // عشان الأدمن يشوف اسم الدكتور صاحب الوثيقة
+                    .ThenInclude(doc => doc.AppUser) 
                 .Where(d => !d.IsVerified && string.IsNullOrEmpty(d.RejectionReason))
-                .OrderBy(d => d.UploadedAt) // الأقدم أولاً عشان نخلصهم بالدور
+                .OrderBy(d => d.UploadedAt) 
                 .ToListAsync();
         }
 
@@ -42,7 +42,7 @@ namespace Nabd.Infrastructure.Repositories.Profiles
                 .ThenInclude(doc => doc.AppUser)
                 .AsQueryable();
 
-            // تحويل الـ Enum لشرط منطقي بناءً على حقول الـ Entity المتاحة
+
             switch (status)
             {
                 case VerificationDocumentStatus.Accepted:
@@ -50,12 +50,12 @@ namespace Nabd.Infrastructure.Repositories.Profiles
                     break;
 
                 case VerificationDocumentStatus.Rejected:
-                    // مرفوضة = غير موثقة + يوجد سبب رفض
+                   
                     query = query.Where(d => !d.IsVerified && !string.IsNullOrEmpty(d.RejectionReason));
                     break;
 
                 case VerificationDocumentStatus.Pending:
-                    // معلقة = غير موثقة + لا يوجد سبب رفض
+                    
                     query = query.Where(d => !d.IsVerified && string.IsNullOrEmpty(d.RejectionReason));
                     break;
             }

@@ -18,14 +18,14 @@ namespace Nabd.Infrastructure.Repositories.Identity
         public async Task<RefreshToken?> GetByTokenAsync(string token)
         {
             return await _dbSet
-                .Include(rt => rt.AppUser) // في نبض اسمها AppUser
+                .Include(rt => rt.AppUser) 
                 .FirstOrDefaultAsync(rt => rt.Token == token);
         }
 
         public async Task<IEnumerable<RefreshToken>> GetByUserIdAsync(Guid userId)
         {
             return await _dbSet
-                .Where(rt => rt.AppUserId == userId) // في نبض اسمها AppUserId
+                .Where(rt => rt.AppUserId == userId) 
                 .OrderByDescending(rt => rt.CreatedAt)
                 .ToListAsync();
         }
@@ -35,8 +35,8 @@ namespace Nabd.Infrastructure.Repositories.Identity
             var now = DateTime.UtcNow;
             return await _dbSet
                 .Where(rt => rt.AppUserId == userId
-                    && rt.RevokedOn == null // لم يتم إلغاؤه
-                    && rt.ExpiresOn > now)  // لم تنتهِ صلاحيته
+                    && rt.RevokedOn == null 
+                    && rt.ExpiresOn > now) 
                 .OrderByDescending(rt => rt.CreatedAt)
                 .ToListAsync();
         }
@@ -47,7 +47,7 @@ namespace Nabd.Infrastructure.Repositories.Identity
 
             if (refreshToken != null && refreshToken.RevokedOn == null)
             {
-                // تحديث الحالة فقط (الحفظ سيتم في UnitOfWork)
+               
                 refreshToken.RevokedOn = DateTime.UtcNow;
                 refreshToken.ReasonRevoked = reason;
                 refreshToken.RevokedByIp = revokedByIp;
@@ -58,7 +58,7 @@ namespace Nabd.Infrastructure.Repositories.Identity
 
         public async Task RevokeAllUserTokensAsync(Guid userId, string? reason = null)
         {
-            // نجلب التوكنات النشطة فقط لنلغيها
+           
             var activeTokens = await GetActiveTokensByUserIdAsync(userId);
 
             foreach (var token in activeTokens)
@@ -68,24 +68,23 @@ namespace Nabd.Infrastructure.Repositories.Identity
                 
                 Update(token);
             }
-            // ملاحظة: الحفظ SaveChanges يتم استدعاؤه في الـ Service عبر UnitOfWork
+          
         }
 
         public async Task DeleteExpiredTokensAsync()
         {
             var now = DateTime.UtcNow;
             
-            // نجلب التوكنات المنتهية
+           
             var expiredTokens = await _dbSet
                 .Where(rt => rt.ExpiresOn < now)
                 .ToListAsync();
 
             if (expiredTokens.Any())
             {
-                // حذف جماعي
+        
                 _dbSet.RemoveRange(expiredTokens);
-                // هنا ممكن نحتاج SaveChanges فورياً لأن دي عملية صيانة Background Job
-                // لكن حسب الـ Pattern سنتركها للـ UnitOfWork إذا تم استدعاؤها من Service
+              
             }
         }
 

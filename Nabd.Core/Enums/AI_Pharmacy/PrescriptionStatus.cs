@@ -17,6 +17,6 @@ namespace Nabd.Core.Enums
         Cancelled = 4,
 
         [Description("صرف جزئي")]
-        PartiallyDispensed = 5  // (إضافة Enterprise: لو الصيدلية معندهاش كل الأدوية)
+        PartiallyDispensed = 5 
     }
 }

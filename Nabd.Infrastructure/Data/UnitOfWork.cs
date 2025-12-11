@@ -7,6 +7,7 @@ using Nabd.Core.Interfaces.Repositories.Medical;
 using Nabd.Core.Interfaces.Repositories.Operations;
 using Nabd.Core.Interfaces.Repositories.Pharmacy;
 using Nabd.Core.Interfaces.Repositories.Profiles;
+using Nabd.Core.Interfaces.Repositories.System; 
 using Nabd.Infrastructure.Repositories.AI;
 using Nabd.Infrastructure.Repositories.Feedback;
 using Nabd.Infrastructure.Repositories.Identity;
@@ -14,6 +15,7 @@ using Nabd.Infrastructure.Repositories.Medical;
 using Nabd.Infrastructure.Repositories.Operations;
 using Nabd.Infrastructure.Repositories.Pharmacy;
 using Nabd.Infrastructure.Repositories.Profiles;
+using Nabd.Infrastructure.Repositories.System; 
 using System;
 using System.Threading.Tasks;
 
@@ -28,39 +30,40 @@ namespace Nabd.Infrastructure.Data
         {
             _context = context;
 
-            // Identity
-            Users = new AppUserRepository(_context); // تم تعديل الاسم لـ Users
+            // 1. Identity
+            Users = new AppUserRepository(_context);
             RefreshTokens = new RefreshTokenRepository(_context);
 
-            // Profiles
+            // 2. Profiles
             Doctors = new DoctorRepository(_context);
             Patients = new PatientRepository(_context);
             DoctorDocuments = new DoctorDocumentRepository(_context);
 
-            // Medical
+            // 3. Medical
             Appointments = new AppointmentRepository(_context);
             ConsultationRecords = new ConsultationRecordRepository(_context);
             MedicalHistoryItems = new MedicalHistoryItemRepository(_context);
 
-            // Operations
+            // 4. Operations
             DoctorSchedules = new DoctorScheduleRepository(_context);
             ClinicBranches = new ClinicBranchRepository(_context);
 
-            // Feedback
-            DoctorReviews = new DoctorReviewRepository(_context);
-
-            // Pharmacy
+            // 5. Pharmacy
             Medications = new MedicationRepository(_context);
             Prescriptions = new PrescriptionRepository(_context);
 
-            // AI
+            // 6. Feedback & AI
+            DoctorReviews = new DoctorReviewRepository(_context);
             AIDiagnosisLogs = new AIDiagnosisLogRepository(_context);
+
+            // 7. System 
+            SystemParameters = new ParameterRepository(_context);
         }
 
         // ==========================================
-        // Properties Implementation (Must match Interface)
+        // Properties
         // ==========================================
-        public IAppUserRepository Users { get; private set; } // كان اسمها AppUsers
+        public IAppUserRepository Users { get; private set; }
         public IRefreshTokenRepository RefreshTokens { get; private set; }
 
         public IDoctorRepository Doctors { get; private set; }
@@ -74,18 +77,17 @@ namespace Nabd.Infrastructure.Data
         public IDoctorScheduleRepository DoctorSchedules { get; private set; }
         public IClinicBranchRepository ClinicBranches { get; private set; }
 
-        public IDoctorReviewRepository DoctorReviews { get; private set; }
-
         public IMedicationRepository Medications { get; private set; }
         public IPrescriptionRepository Prescriptions { get; private set; }
 
-        // افترضنا أنك ستضيف هذا للإنترفيس لاحقاً
+        public IDoctorReviewRepository DoctorReviews { get; private set; }
         public IAIDiagnosisLogRepository AIDiagnosisLogs { get; private set; }
 
-        // ==========================================
-        // Transaction Management
-        // ==========================================
+        public IParameterRepository SystemParameters { get; private set; } 
 
+        // ==========================================
+        // Transactions
+        // ==========================================
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();

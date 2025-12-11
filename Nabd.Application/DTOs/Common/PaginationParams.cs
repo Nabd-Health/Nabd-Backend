@@ -2,7 +2,7 @@
 {
     public class PaginationParams
     {
-        private const int MaxPageSize = 50; // حماية للسيرفر
+        private const int MaxPageSize = 50; 
         public int PageNumber { get; set; } = 1;
 
         private int _pageSize = 10;
@@ -12,9 +12,9 @@
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
 
-        // إضافات مهمة للبحث والترتيب (Standard Best Practice)
-        public string? SearchTerm { get; set; } // للبحث في الاسم أو الكود
-        public string? SortBy { get; set; }     // اسم العمود المراد الترتيب به
-        public bool IsDescending { get; set; } = false; // تصاعدي أم تنازلي
+        
+        public string? SearchTerm { get; set; } 
+        public string? SortBy { get; set; }   
+        public bool IsDescending { get; set; } = false; 
     }
 }

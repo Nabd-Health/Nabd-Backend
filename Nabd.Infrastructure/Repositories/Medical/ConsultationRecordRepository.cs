@@ -13,28 +13,37 @@ namespace Nabd.Infrastructure.Repositories.Medical
         {
         }
 
-        public async Task<ConsultationRecord?> GetByAppointmentIdAsync(Guid appointmentId)
+     
+        public async Task<ConsultationRecord?> GetByIdWithDetailsAsync(Guid id)
         {
-            // الهدف: عرض تفاصيل الكشف كاملة في واجهة الطبيب
             return await _dbSet
                 .Include(c => c.Prescriptions)
-                    .ThenInclude(p => p.PrescriptionItems) // عشان نعرض الأدوية اللي اتكتبت
-                .Include(c => c.Attachments) // الأشعة والتحاليل المرفقة
-                .Include(c => c.AIDiagnosisLogs) // اقتراحات الـ AI السابقة لهذا الكشف
+                    .ThenInclude(p => p.PrescriptionItems) 
+                .Include(c => c.Attachments) 
+                .Include(c => c.AIDiagnosisLogs) 
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+       
+        public async Task<ConsultationRecord?> GetByAppointmentIdAsync(Guid appointmentId)
+        {
+            return await _dbSet
+                .Include(c => c.Prescriptions)
+                    .ThenInclude(p => p.PrescriptionItems)
+                .Include(c => c.Attachments)
+                .Include(c => c.AIDiagnosisLogs)
                 .FirstOrDefaultAsync(c => c.AppointmentId == appointmentId);
         }
 
+       
         public async Task<ConsultationRecord?> GetForDiagnosisAnalysisAsync(Guid consultationId)
         {
-            // الهدف: تجميع البيانات اللازمة لموديل الـ AI (Feedback Loop)
-            // الـ AI محتاج يعرف: أعراض المريض + تشخيص الدكتور النهائي + الأدوية اللي اتكتبت + سن وجنس المريض
-
             return await _dbSet
                 .Include(c => c.Appointment)
-                    .ThenInclude(a => a.Patient) // ضروري عشان نعرف السن والجنس (Demographics)
+                    .ThenInclude(a => a.Patient) 
                 .Include(c => c.Prescriptions)
-                    .ThenInclude(p => p.PrescriptionItems) // عشان الـ AI يعرف "إيه الدواء المناسب لهذا التشخيص"
-                .Include(c => c.AIDiagnosisLogs) // عشان نقارن اقتراح الـ AI بقرار الدكتور النهائي
+                    .ThenInclude(p => p.PrescriptionItems) 
+                .Include(c => c.AIDiagnosisLogs) 
                 .FirstOrDefaultAsync(c => c.Id == consultationId);
         }
     }

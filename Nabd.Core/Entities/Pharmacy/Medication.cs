@@ -1,5 +1,5 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Enums; // عشان MedicationForm
+using Nabd.Core.Enums; 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,33 +8,33 @@ namespace Nabd.Core.Entities.Pharmacy
     public class Medication : BaseEntity
     {
         // ==========================================
-        // 1. Identification (هوية الدواء)
+        // 1. Identification 
         // ==========================================
 
         [Required]
         [MaxLength(150)]
-        public required string TradeName { get; set; } // الاسم التجاري (Panadol)
+        public required string TradeName { get; set; } 
 
         [Required]
         [MaxLength(150)]
-        // [مهم جداً للـ AI]: الموديل بيقارن المواد الفعالة عشان يكتشف التعارض
-        public required string ScientificName { get; set; } // المادة الفعالة (Paracetamol)
+      
+        public required string ScientificName { get; set; } 
 
         [MaxLength(100)]
-        public string? Manufacturer { get; set; } // الشركة المصنعة
+        public string? Manufacturer { get; set; } 
 
         // ==========================================
-        // 2. Specifications (المواصفات)
+        // 2. Specifications
         // ==========================================
 
         [Required]
         [MaxLength(50)]
-        public required string Strength { get; set; } // التركيز (500mg, 1g)
+        public required string Strength { get; set; } 
 
         [Required]
-        public required MedicationForm Form { get; set; } // الشكل (أقراص، شراب، حقن)
+        public required MedicationForm Form { get; set; } 
 
-        // الباركود العالمي (عشان لو هنربط مع صيدليات خارجية أو Scan بالكامل)
+      
         [MaxLength(50)]
         public string? Barcode { get; set; }
 
@@ -43,14 +43,14 @@ namespace Nabd.Core.Entities.Pharmacy
         // ==========================================
 
         [MaxLength(1000)]
-        public string? Description { get; set; } // وصف الاستخدام / دواعي الاستعمال
+        public string? Description { get; set; } 
 
         [MaxLength(500)]
-        public string? Contraindications { get; set; } // موانع الاستعمال (نصي)
+        public string? Contraindications { get; set; } 
 
-        public bool IsActive { get; set; } = true; // هل الدواء متاح في السوق؟
+        public bool IsActive { get; set; } = true;
 
-        // السعر الاسترشادي (اختياري)
+       
         [Column(TypeName = "decimal(18,2)")]
         public decimal? ReferencePrice { get; set; }
 
@@ -58,7 +58,7 @@ namespace Nabd.Core.Entities.Pharmacy
         // 4. Relationships
         // ==========================================
 
-        // عشان نعرف الدواء ده اتوصف كام مرة في السيستم
+  
         public virtual ICollection<PrescriptionItem> PrescriptionItems { get; set; } = new List<PrescriptionItem>();
     }
 }

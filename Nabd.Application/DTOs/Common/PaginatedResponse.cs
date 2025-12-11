@@ -23,7 +23,6 @@ namespace Nabd.Application.DTOs.Common
             Data = data;
         }
 
-        // Factory Method لتسهيل الإنشاء
         public static PaginatedResponse<T> Create(IReadOnlyList<T> data, int count, int pageNumber, int pageSize)
         {
             return new PaginatedResponse<T>(data, count, pageNumber, pageSize);

@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Nabd.Application.Extensions
 {
-    // يضيف وظيفة GetDescription لكل Enums، لجلب القيمة من [Description("...")]
+  
     public static class EnumExtensions
     {
         public static string GetDescription(this Enum value)

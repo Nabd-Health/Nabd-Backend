@@ -1,16 +1,13 @@
-﻿using Nabd.Application.DTOs.Medical; // لاستخدام MedicalHistoryItemResponse و ConsultationRecordSummaryDto
-using Nabd.Application.DTOs.Pharmacy; // لاستخدام PrescriptionResponse
+﻿using Nabd.Application.DTOs.Medical;
+using Nabd.Application.DTOs.Pharmacy; 
 using Nabd.Core.Enums.Identity;
-using Nabd.Core.Enums.Medical; // BloodType, Gender
+using Nabd.Core.Enums.Medical; 
 using System;
 using System.Collections.Generic;
 
 namespace Nabd.Application.DTOs.Profiles
 {
-    /// <summary>
-    /// الملف الطبي الكامل للمريض (360-Degree View)
-    /// يُستخدم في صفحة الطبيب عند فتح ملف المريض.
-    /// </summary>
+ 
     public class PatientFullProfileDto
     {
         // ==========================================
@@ -21,7 +18,7 @@ namespace Nabd.Application.DTOs.Profiles
         public string? PhoneNumber { get; set; }
         public string? ProfileImageUrl { get; set; }
 
-        // البيانات الديموغرافية (مهمة للتشخيص)
+  
         public int Age { get; set; }
         public Gender Gender { get; set; }
         public string? JobTitle { get; set; }
@@ -38,18 +35,17 @@ namespace Nabd.Application.DTOs.Profiles
         // 3. Medical History (Timeline)
         // ==========================================
 
-        // (يستخدم MedicalHistoryItemResponse الموجود في DTOs.Medical)
+
         public List<MedicalHistoryItemResponse> MedicalHistory { get; set; } = new();
 
         // ==========================================
-        // 4. Clinical History (السجلات والروشتات)
+        // 4. Clinical History 
         // ==========================================
 
-        // آخر الروشتات التي صرفها المريض (لمعرفة الأدوية الحالية)
+
         public List<PrescriptionResponse> RecentPrescriptions { get; set; } = new();
 
-        // تاريخ الزيارات السابقة (لمتابعة تطور الحالة)
-        // (يستخدم ConsultationRecordSummaryDto الموجود في DTOs.Medical)
+      
         public List<ConsultationRecordSummaryDto> PastVisits { get; set; } = new();
     }
 }

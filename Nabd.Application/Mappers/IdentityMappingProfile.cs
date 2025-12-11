@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Nabd.Application.DTOs.Identity;
-using Nabd.Core.DTOs; // تأكد إن ده المسار الصح لـ AuthResponseDto
-using Nabd.Core.Entities.Identity; // AppUser
-using Nabd.Core.Entities.Profiles; // Doctor, Patient
+using Nabd.Core.DTOs; 
+using Nabd.Core.Entities.Identity; 
+using Nabd.Core.Entities.Profiles; 
 using Nabd.Core.Enums;
-using Nabd.Core.Enums.Identity; // UserType, DoctorStatus
+using Nabd.Core.Enums.Identity; 
 
 namespace Nabd.Application.Mappers
 {
@@ -47,10 +46,10 @@ namespace Nabd.Application.Mappers
             // 5. AppUser => AuthResponseDto
             CreateMap<AppUser, AuthResponseDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
-                // ✅ التعديل: UserRole بقت UserType
+           
                 .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.UserType.ToString()))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.DisplayName))
-                // ✅ التعديل: IsAuthSuccessful بقت IsSuccess
+
                 .ForMember(dest => dest.IsSuccess, opt => opt.MapFrom(src => true))
                 .ForMember(dest => dest.Token, opt => opt.Ignore())
                 .ForMember(dest => dest.RefreshToken, opt => opt.Ignore());
@@ -59,7 +58,7 @@ namespace Nabd.Application.Mappers
             CreateMap<RefreshToken, AuthResponseDto>()
                 .ForMember(dest => dest.RefreshToken, opt => opt.MapFrom(src => src.Token))
                 .ForMember(dest => dest.Token, opt => opt.Ignore())
-                // ✅ التعديل: IsAuthSuccessful بقت IsSuccess
+         
                 .ForMember(dest => dest.IsSuccess, opt => opt.MapFrom(src => true));
         }
     }

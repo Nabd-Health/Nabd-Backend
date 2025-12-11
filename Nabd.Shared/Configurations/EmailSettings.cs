@@ -10,7 +10,7 @@ namespace Nabd.Shared.Configurations
     public class EmailSettings
     {
         // ==========================================
-        // SMTP Server Configuration (إعدادات الخادم)
+        // SMTP Server Configuration 
         // ==========================================
         public string SmtpHost { get; set; } = string.Empty;
         public int SmtpPort { get; set; } = 587;
@@ -19,26 +19,26 @@ namespace Nabd.Shared.Configurations
         public string SmtpPassword { get; set; } = string.Empty;
 
         // ==========================================
-        // Sender Identity (هوية المُرسِل)
+        // Sender Identity 
         // ==========================================
-        public string FromName { get; set; } = "Nabd HealthCare"; // تم التحديث من Shuryan
+        public string FromName { get; set; } = "Nabd HealthCare"; 
         public string FromEmail { get; set; } = string.Empty;
         public string ApplicationBaseUrl { get; set; } = string.Empty;
 
         // ==========================================
-        // OTP & Security Rules (قواعد الأمان)
+        // OTP & Security Rules 
         // ==========================================
 
-        // صلاحية كود تفعيل الإيميل
+       
         public int VerificationOtpExpirationMinutes { get; set; } = 10;
 
-        // صلاحية كود إعادة تعيين كلمة المرور
+        
         public int PasswordResetOtpExpirationMinutes { get; set; } = 15;
 
-        // طول كود OTP (مثال: 6 أرقام)
+        
         public int OtpLength { get; set; } = 6;
 
-        // الحد الأقصى لإعادة إرسال الكود في الساعة الواحدة (لمنع إساءة الاستخدام)
+       
         public int MaxOtpResendAttemptsPerHour { get; set; } = 5;
     }
 }

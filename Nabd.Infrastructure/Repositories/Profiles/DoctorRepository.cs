@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nabd.Core.Entities.Profiles;
 using Nabd.Core.Enums;
-using Nabd.Core.Enums.Identity; // تأكد من وجود DoctorStatus هنا أو في Enums.Profiles
+using Nabd.Core.Enums.Identity; 
 using Nabd.Core.Enums.Medical;
 using Nabd.Core.Enums.Operations;
 using Nabd.Core.Interfaces.Repositories.Profiles;
@@ -26,12 +26,12 @@ namespace Nabd.Infrastructure.Repositories.Profiles
         public async Task<Doctor?> GetByIdWithDetailsAsync(Guid id)
         {
             return await _dbSet
-                .Include(d => d.AppUser) // عشان نجيب الإيميل واسم المستخدم
+                .Include(d => d.AppUser) 
                 .Include(d => d.ClinicBranches)
-                    .ThenInclude(b => b.Schedules) // جداول المواعيد
-                .Include(d => d.VerificationDocuments) // الوثائق
-                .Include(d => d.DoctorReviews.OrderByDescending(r => r.CreatedAt).Take(5)) // آخر 5 تقييمات
-                .AsSplitQuery() // تحسين الأداء عند تحميل علاقات كثيرة
+                    .ThenInclude(b => b.Schedules) 
+                .Include(d => d.VerificationDocuments) 
+                .Include(d => d.DoctorReviews.OrderByDescending(r => r.CreatedAt).Take(5)) 
+                .AsSplitQuery() 
                 .FirstOrDefaultAsync(d => d.Id == id);
         }
 
@@ -56,7 +56,7 @@ namespace Nabd.Infrastructure.Repositories.Profiles
 
         public async Task<Doctor?> GetByEmailAsync(string email)
         {
-            // البحث عبر جدول AppUser المرتبط
+            
             return await _dbSet
                 .Include(d => d.AppUser)
                 .FirstOrDefaultAsync(d => d.AppUser.Email == email);
@@ -67,7 +67,7 @@ namespace Nabd.Infrastructure.Repositories.Profiles
             return await _dbSet
                 .Include(d => d.AppUser)
                 .Include(d => d.ClinicBranches)
-                // نفترض أن DoctorStatus يحتوي على Verified أو Active، أو نعتمد على VerifiedAt
+                
                 .Where(d => d.VerifiedAt != null && d.IsAvailable)
                 .ToListAsync();
         }
@@ -80,13 +80,13 @@ namespace Nabd.Infrastructure.Repositories.Profiles
                 .Where(d => d.Specialization == specialty
                             && d.VerifiedAt != null
                             && d.IsAvailable)
-                .OrderByDescending(d => d.AverageRating) // الأفضل تقييماً أولاً
+                .OrderByDescending(d => d.AverageRating) 
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Doctor>> GetDoctorsByGovernorateAsync(Governorate governorate)
         {
-            // نجلب الدكتور الذي يمتلك *أي* فرع في هذه المحافظة
+            
             return await _dbSet
                 .Include(d => d.ClinicBranches)
                 .Where(d => d.ClinicBranches.Any(b => b.Governorate == governorate)
@@ -109,8 +109,8 @@ namespace Nabd.Infrastructure.Repositories.Profiles
             // 1. Start with Base Query
             var query = _dbSet
                 .Include(d => d.AppUser)
-                .Include(d => d.ClinicBranches) // نحتاج الفروع عشان نعرف المكان والسعر
-                .Where(d => d.VerifiedAt != null && d.IsAvailable); // فقط الموثقين والمتاحين
+                .Include(d => d.ClinicBranches) 
+                .Where(d => d.VerifiedAt != null && d.IsAvailable); 
 
             // 2. Apply Filters
 
@@ -156,7 +156,7 @@ namespace Nabd.Infrastructure.Repositories.Profiles
             }
 
             // 3. Execution
-            // ترتيب النتائج: الأعلى تقييماً ثم الأقل سعراً
+ 
             return await query
                 .OrderByDescending(d => d.AverageRating)
                 .ThenBy(d => d.ConsultationFee)
@@ -165,11 +165,10 @@ namespace Nabd.Infrastructure.Repositories.Profiles
 
         public async Task<bool> IsAvailableAtAsync(Guid doctorId, DateTime dateTime)
         {
-            var dayOfWeek = dateTime.DayOfWeek; // System.DayOfWeek
-            var timeOfDay = dateTime.TimeOfDay; // TimeSpan
+            var dayOfWeek = dateTime.DayOfWeek; 
+            var timeOfDay = dateTime.TimeOfDay; 
 
-            // نبحث في كل فروع الدكتور
-            // هل يوجد أي فرع عنده جدول في هذا اليوم وهذا الوقت؟
+         
             var isAvailable = await _context.DoctorSchedules
                 .AnyAsync(s =>
                     s.DoctorId == doctorId &&
@@ -179,8 +178,6 @@ namespace Nabd.Infrastructure.Repositories.Profiles
                     s.EndTime >= timeOfDay
                 );
 
-            // ملاحظة: هذا فحص مبدئي لجدول العمل، 
-            // الـ AppointmentService ستتحقق لاحقاً إذا كان الوقت محجوزاً بالفعل أم لا.
 
             return isAvailable;
         }
@@ -188,10 +185,10 @@ namespace Nabd.Infrastructure.Repositories.Profiles
         public async Task<IEnumerable<Doctor>> GetVerifiedDoctorsWithDetailsForListAsync()
         {
             return await _dbSet
-                .Include(d => d.ClinicBranches) // نحتاج الفروع لعرض العناوين في القائمة
+                .Include(d => d.ClinicBranches) 
                 .Where(d => d.VerifiedAt != null)
-                .OrderByDescending(d => d.AverageRating) // عرض النجوم أولاً
-                .AsNoTracking() // أسرع للقراءة فقط
+                .OrderByDescending(d => d.AverageRating) 
+                .AsNoTracking() 
                 .ToListAsync();
         }
     }

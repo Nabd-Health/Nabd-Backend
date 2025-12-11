@@ -23,17 +23,17 @@ namespace Nabd.Core.Enums
         Logout = 5,
 
         [Description("عرض بيانات حساسة")]
-        Access = 6,  // (زي ملف المريض النفسي)
+        Access = 6,  
 
-        // --- إضافات Enterprise للأمان ---
+        // ---  Enterprise  ---
 
         [Description("فشل تسجيل الدخول")]
-        FailedLogin = 7, // (مهم لاكتشاف محاولات الاختراق Brute Force)
+        FailedLogin = 7, 
 
         [Description("تصدير بيانات")]
-        Export = 8,      // (عشان لو دكتور سرق داتا المرضى وعمل Excel Export نعرفه)
+        Export = 8,      
 
         [Description("طباعة تقرير")]
-        Print = 9        // (طباعة الروشتات أو التقارير)
+        Print = 9        
     }
 }

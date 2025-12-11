@@ -1,5 +1,5 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Enums.Medical; // AdministrationRoute
+using Nabd.Core.Enums.Medical; 
 using System.ComponentModel.DataAnnotations;
 
 namespace Nabd.Core.Entities.Pharmacy
@@ -17,28 +17,28 @@ namespace Nabd.Core.Entities.Pharmacy
         public virtual required Medication Medication { get; set; }
 
         // ==========================================
-        // 2. Dosing Instructions (الجرعة الدقيقة للـ AI)
+        // 2. Dosing Instructions
         // ==========================================
 
         [Required]
         [MaxLength(100)]
-        public required string Dosage { get; set; } // الجرعة (مثال: "500mg")
+        public required string Dosage { get; set; } 
 
         [Required]
         [MaxLength(100)]
-        public required string Frequency { get; set; } // التكرار (مثال: "Every 8 hours")
+        public required string Frequency { get; set; } 
 
         [MaxLength(50)]
-        public string? Duration { get; set; } // المدة (مثال: "5 Days")
+        public string? Duration { get; set; } 
 
-        public AdministrationRoute Route { get; set; } = AdministrationRoute.Oral; // طريقة الأخذ (فم، حقن..)
+        public AdministrationRoute Route { get; set; } = AdministrationRoute.Oral; 
 
         // ==========================================
-        // 3. Patient Instructions (تعليمات للمريض)
+        // 3. Patient Instructions 
         // ==========================================
 
         [MaxLength(500)]
-        public string? Instructions { get; set; } // (مثال: "يؤخذ بعد الأكل بساعة")
+        public string? Instructions { get; set; } 
 
         [MaxLength(200)]
         public string? Notes { get; set; }

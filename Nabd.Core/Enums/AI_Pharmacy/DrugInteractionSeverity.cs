@@ -8,15 +8,15 @@ namespace Nabd.Core.Enums
         None = 0,
 
         [Description("تفاعل طفيف (Minor)")]
-        Minor = 1,      // لا يحتاج تغيير الدواء، فقط مراقبة
+        Minor = 1,      
 
         [Description("تفاعل متوسط (Moderate)")]
-        Moderate = 2,   // يحتاج حذر أو تعديل الجرعة
+        Moderate = 2,  
 
         [Description("تفاعل خطير (Major)")]
-        Major = 3,      // يجب تغيير الدواء فوراً
+        Major = 3,      
 
         [Description("ممنوع الاستخدام (Contraindicated)")]
-        Contraindicated = 4 // خطر على الحياة
+        Contraindicated = 4 
     }
 }

@@ -5,16 +5,16 @@ namespace Nabd.Core.Enums.Medical
     public enum AdministrationRoute
     {
         [Description("عن طريق الفم")]
-        Oral = 1,           // (أقراص/شراب)
+        Oral = 1,           
 
         [Description("حقن")]
-        Injection = 2,      // (IV, IM, SC)
+        Injection = 2,      
 
         [Description("موضعي")]
-        Topical = 3,        // (مراهم/كريمات)
+        Topical = 3,       
 
         [Description("استنشاق")]
-        Inhalation = 4,     // (بخاخات)
+        Inhalation = 4,     
 
         [Description("تحت اللسان")]
         Sublingual = 5,
@@ -23,6 +23,6 @@ namespace Nabd.Core.Enums.Medical
         Rectal = 6,
 
         [Description("قطرة")]
-        Drops = 7           // (عيون/أذن) - إضافة صغيرة مهمة
+        Drops = 7          
     }
 }

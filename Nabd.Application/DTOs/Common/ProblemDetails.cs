@@ -5,9 +5,9 @@
         public int StatusCode { get; set; }
         public string? Title { get; set; }
         public string? Detail { get; set; }
-        public string? Instance { get; set; } // مسار الـ Request (Path)
+        public string? Instance { get; set; } 
 
-        // تفاصيل إضافية (مثل Validation Errors)
+       
         public object? Extensions { get; set; }
 
         public ProblemDetails(int statusCode, string? title = null, string? detail = null, string? instance = null)

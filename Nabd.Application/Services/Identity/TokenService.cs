@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nabd.Application.Interfaces;
 using Nabd.Core.Entities.Identity;
-using Nabd.Core.Interfaces;
+using Nabd.Core.Interfaces; 
 using Nabd.Shared.Configurations;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Nabd.Application.Services.Identity
         }
 
         // =========================================================
-        // 1. إنشاء Access Token (JWT)
+        // 1.  (JWT)
         // =========================================================
         public string CreateToken(AppUser user)
         {
@@ -36,11 +37,11 @@ namespace Nabd.Application.Services.Identity
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
-                new Claim(ClaimTypes.Name, user.DisplayName),
-                new Claim(ClaimTypes.Role, user.UserType.ToString())
+                new Claim(ClaimTypes.Name, user.DisplayName), // اسم العرض
+                new Claim(ClaimTypes.Role, user.UserType.ToString()) // Role
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey ?? ""));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -59,7 +60,7 @@ namespace Nabd.Application.Services.Identity
         }
 
         // =========================================================
-        // 2. إنشاء Refresh Token
+        // 2.  Refresh Token
         // =========================================================
         public async Task<RefreshToken> GenerateRefreshToken(Guid userId, string ipAddress)
         {
@@ -77,7 +78,7 @@ namespace Nabd.Application.Services.Identity
                 IsDeleted = false
             };
 
-            // ✅ التعديل: استخدام _unitOfWork بدلاً من Repository مباشر
+
             await _unitOfWork.RefreshTokens.AddAsync(refreshToken);
             await _unitOfWork.CompleteAsync();
 
@@ -85,7 +86,7 @@ namespace Nabd.Application.Services.Identity
         }
 
         // =========================================================
-        // 3. استخراج البيانات من التوكن المنتهي
+        // 3. قراءة التوكن المنتهي (للتجديد)
         // =========================================================
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
@@ -96,8 +97,8 @@ namespace Nabd.Application.Services.Identity
                 ValidateIssuer = _jwtSettings.ValidateIssuer,
                 ValidIssuer = _jwtSettings.Issuer,
                 ValidateIssuerSigningKey = _jwtSettings.ValidateIssuerSigningKey,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
-                ValidateLifetime = false
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey ?? "")),
+                ValidateLifetime = false // نتجاهل الوقت لأننا عارفين إنه منتهي
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

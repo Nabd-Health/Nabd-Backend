@@ -25,11 +25,10 @@ namespace Nabd.Infrastructure.Repositories
         {
             var entity = await _dbSet.FindAsync(id);
 
-            // فحص ديناميكي للحذف الناعم
+          
             if (entity is SoftDeletableEntity softDeletable && softDeletable.IsDeleted)
                 return null;
 
-            // دعم خاص لـ AppUser
             var isDeletedProp = entity?.GetType().GetProperty("IsDeleted");
             if (isDeletedProp != null && (bool)(isDeletedProp.GetValue(entity) ?? false))
                 return null;
@@ -76,7 +75,7 @@ namespace Nabd.Infrastructure.Repositories
         {
             IQueryable<T> query = _dbSet;
 
-            // تطبيق الفلتر ديناميكياً
+   
             if (typeof(SoftDeletableEntity).IsAssignableFrom(typeof(T)))
             {
                 query = query.Where(e => !((SoftDeletableEntity)(object)e).IsDeleted);

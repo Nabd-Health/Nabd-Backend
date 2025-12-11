@@ -2,33 +2,32 @@
 
 namespace Nabd.Core.Enums.Medical
 {
-    // تحديد أنواع الكشوفات والزيارات لضبط الأسعار والجدولة
+  
     public enum ConsultationType
     {
         [Description("غير محدد")]
         Unknown = 0,
 
         // ==========================================
-        // 1. الكشوفات الأساسية (Core Services)
+        // 1.  (Core Services)
         // ==========================================
 
         [Description("كشف جديد")]
-        InitialVisit = 1,       // كشف أول (السعر الكامل)
+        InitialVisit = 1,      
 
         [Description("متابعة (استشارة)")]
-        FollowUp = 2,           // زيارة متابعة (عادة مجانية أو مخفضة)
+        FollowUp = 2,          
 
         // ==========================================
-        // 2. الخدمات المتقدمة (Advanced Services)
+        // 2.  (Advanced Services)
         // ==========================================
 
         [Description("كشف عن بعد (أونلاين)")]
-        Teleconsultation = 3,   // استشارة فيديو/صوت
+        Teleconsultation = 3,   
 
         [Description("رأي طبي ثانٍ")]
-        SecondOpinion = 4,      // مراجعة تشخيص دكتور آخر
-
+        SecondOpinion = 4,      
         [Description("طوارئ")]
-        Emergency = 5           // حالة عاجلة وغير مجدولة
+        Emergency = 5           
     }
 }

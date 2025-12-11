@@ -1,6 +1,6 @@
 ﻿using Nabd.Core.Entities.Base;
-using Nabd.Core.Entities.Profiles; // Patient
-using Nabd.Core.Enums.Operations;  // MedicalAttachmentType
+using Nabd.Core.Entities.Profiles; 
+using Nabd.Core.Enums.Operations;  
 using System.ComponentModel.DataAnnotations;
 
 namespace Nabd.Core.Entities.Medical
@@ -8,58 +8,55 @@ namespace Nabd.Core.Entities.Medical
     public class MedicalAttachment : BaseEntity
     {
         // ==========================================
-        // 1. Linkage (التبعية)
+        // 1. Linkage 
         // ==========================================
 
         public Guid PatientId { get; set; }
         public virtual required Patient Patient { get; set; }
 
-        // اختياري: ربطه بكشف معين (عشان الدكتور يعرف إن الأشعة دي طلبها في الكشف ده)
+        
         public Guid? ConsultationRecordId { get; set; }
         public virtual ConsultationRecord? ConsultationRecord { get; set; }
 
-        // [مهم للأمان]: مين اللي رفع الملف؟ (عشان لو اترفع ملف غلط نعرف نحاسب مين)
+      
         public required string UploadedByUserId { get; set; }
 
         // ==========================================
-        // 2. File Metadata (البيانات التقنية)
+        // 2. File Metadata 
         // ==========================================
 
         [Required]
         [MaxLength(250)]
-        public required string FileName { get; set; } // الاسم الأصلي (blood_test.pdf)
+        public required string FileName { get; set; } 
 
         [Required]
-        public required string FileUrl { get; set; } // الرابط (Cloud/Local)
+        public required string FileUrl { get; set; } 
 
         [MaxLength(50)]
-        public required string FileType { get; set; } // الامتداد (.jpg, .dicom)
+        public required string FileType { get; set; } 
 
-        public long FileSizeInBytes { get; set; } // الحجم (لإدارة المساحة)
+        public long FileSizeInBytes { get; set; } 
 
         // ==========================================
-        // 3. Medical Context (السياق الطبي)
+        // 3. Medical Context 
         // ==========================================
 
-        public MedicalAttachmentType AttachmentType { get; set; } // (أشعة، تحليل، تقرير)
+        public MedicalAttachmentType AttachmentType { get; set; } 
 
         [MaxLength(500)]
-        public string? Description { get; set; } // وصف (مثال: "أشعة مقطعية قبل العملية")
+        public string? Description { get; set; } 
 
         public DateTime UploadDate { get; set; } = DateTime.UtcNow;
 
         // ==========================================
-        // 4. AI Integration (تجهيز للمستقبل)
+        // 4. AI Integration 
         // ==========================================
 
-        // هل تم تحليله؟
         public bool IsAnalyzedByAI { get; set; } = false;
 
-        // النتيجة الخام (JSON) - إحداثيات أو داتا معقدة
         public string? AIAnalysisResultJson { get; set; }
 
-        // [مهم]: ملخص نصي من الـ AI (عشان يظهر للدكتور في الـ UI مباشرة)
-        // مثال: "Normal Chest X-Ray" أو "Possible fracture detected"
+
         public string? AISummary { get; set; }
     }
 }

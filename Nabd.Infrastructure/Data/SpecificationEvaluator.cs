@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nabd.Core.Entities.Base;
-using Nabd.Core.Specifications; // تأكد إنك عامل الـ Namespace ده في Core
+using Nabd.Core.Specifications; 
 
 namespace Nabd.Infrastructure.Data
 {
@@ -10,13 +10,12 @@ namespace Nabd.Infrastructure.Data
         {
             var query = inputQuery;
 
-            // 1. تطبيق الفلترة (Where)
             if (spec.Criteria != null)
             {
                 query = query.Where(spec.Criteria);
             }
 
-            // 2. تطبيق الترتيب (Order By)
+          
             if (spec.OrderBy != null)
             {
                 query = query.OrderBy(spec.OrderBy);
@@ -27,14 +26,13 @@ namespace Nabd.Infrastructure.Data
                 query = query.OrderByDescending(spec.OrderByDescending);
             }
 
-            // 3. تطبيق التصفح (Pagination)
+            
             if (spec.IsPagingEnabled)
             {
                 query = query.Skip(spec.Skip).Take(spec.Take);
             }
 
-            // 4. تطبيق الربط (Includes) - عشان نجيب الجداول المرتبطة
-            // السطر ده عبقري: بيلف على كل الـ Includes اللي طلبتها ويضيفها للكويري
+         
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query;

@@ -1,6 +1,6 @@
-﻿using Nabd.Core.Enums; // Gender
+﻿using Nabd.Core.Enums; 
 using Nabd.Core.Enums.Identity;
-using Nabd.Core.Enums.Medical; // BloodType (تأكد من وجود هذا الـ Enum)
+using Nabd.Core.Enums.Medical; 
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -54,10 +54,10 @@ namespace Nabd.Core.DTOs
         // 3. بيانات طبية أولية (اختياري للـ AI)
         // ==========================================
 
-        public BloodType? BloodType { get; set; } // اختياري عند التسجيل
+        public BloodType? BloodType { get; set; } 
 
-        public string? ChronicDiseases { get; set; } // أمراض مزمنة
+        public string? ChronicDiseases { get; set; } 
 
-        public string? Allergies { get; set; } // حساسية
+        public string? Allergies { get; set; }
     }
 }

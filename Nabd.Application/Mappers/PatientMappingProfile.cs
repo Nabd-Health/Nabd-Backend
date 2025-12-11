@@ -47,7 +47,7 @@ namespace Nabd.Application.Mappers
 
             // 5. Entity -> Response
             CreateMap<MedicalHistoryItem, MedicalHistoryItemResponse>()
-                // ✅ [التصحيح]: يجب استخدام EventType (الخاصية في الـ Entity)
+
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.EventType.ToString()))
                 .ForMember(dest => dest.EventDate, opt => opt.MapFrom(src => src.EventDate));
         }

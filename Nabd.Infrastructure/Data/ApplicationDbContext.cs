@@ -1,5 +1,5 @@
-﻿/* 
- * using Microsoft.EntityFrameworkCore;
+﻿
+  using Microsoft.EntityFrameworkCore;
 using Nabd.Core.Entities.AI;
 using Nabd.Core.Entities.Identity;
 using Nabd.Core.Entities.Medical;
@@ -18,65 +18,65 @@ namespace Nabd.Infrastructure.Data
         }
 
         // =========================================================
-        // 1. Clinical Core (الموديول الطبي الأساسي)
+        // 1. Clinical Core 
         // =========================================================
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<ConsultationRecord> ConsultationRecords { get; set; }
 
         // =========================================================
-        // 2. Operations & Scheduling (العمليات والمواعيد)
+        // 2. Operations & Scheduling 
         // =========================================================
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ClinicBranch> ClinicBranches { get; set; }
         public DbSet<DoctorSchedule> DoctorSchedules { get; set; }
 
         // =========================================================
-        // 3. E-Prescription (الصيدلية والروشتة)
+        // 3. E-Prescription 
         // =========================================================
         public DbSet<Medication> Medications { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
 
         // =========================================================
-        // 4. AI & MLOps (الذكاء الاصطناعي)
+        // 4. AI & MLOps 
         // =========================================================
         public DbSet<AIDiagnosisLog> AIDiagnosisLogs { get; set; }
 
         // =========================================================
-        // 5. Archiving (المرفقات)
+        // 5. Archiving 
         // =========================================================
         public DbSet<MedicalAttachment> MedicalAttachments { get; set; }
 
         // =========================================================
-        // 6. Security & Auditing (الأمان)
+        // 6. Security & Auditing 
         // =========================================================
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
 
         // =========================================================
-        // ضبط العلاقات والقيود (Fluent API Configuration)
+        //  (Fluent API Configuration)
         // =========================================================
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // تطبيق أي إعدادات خارجية (Best Practice)
+            
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             // -----------------------------------------------------
-            // علاقات الدكتور (Doctor Relationships)
+            // (Doctor Relationships)
             // -----------------------------------------------------
 
-            // الدكتور والفروع (One-to-Many)
+            //(One-to-Many)
             modelBuilder.Entity<Doctor>()
-                .HasMany(d => d.ClinicBranches) // لازم تكون ضفت دي في Doctor.cs (ICollection<ClinicBranch>)
+                .HasMany(d => d.ClinicBranches) 
                 .WithOne(b => b.Doctor)
                 .HasForeignKey(b => b.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // الدكتور والروشتات (One-to-Many)
+            //  (One-to-Many)
             modelBuilder.Entity<Doctor>()
                 .HasMany<Prescription>()
                 .WithOne(p => p.Doctor)
@@ -84,7 +84,7 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // -----------------------------------------------------
-            // علاقات المريض (Patient Relationships)
+            // (Patient Relationships)
             // -----------------------------------------------------
 
             // المريض والمواعيد (One-to-Many)
@@ -102,10 +102,10 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // -----------------------------------------------------
-            // علاقات المواعيد والكشف (Appointment & Consultation)
+            // (Appointment & Consultation)
             // -----------------------------------------------------
 
-            // الموعد والكشف (One-to-One)
+            //  (One-to-One)
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.ConsultationRecord)
                 .WithOne(c => c.Appointment)
@@ -113,28 +113,28 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // -----------------------------------------------------
-            // علاقات الروشتة (Prescription)
+            //  (Prescription)
             // -----------------------------------------------------
 
-            // الكشف والروشتة (One-to-Many) - لأن الكشف ممكن يطلع كذا روشتة
+            // الكشف والروشتة (One-to-Many) 
             modelBuilder.Entity<ConsultationRecord>()
-                .HasMany<Prescription>() // لازم تضيف ICollection<Prescription> في ConsultationRecord
+                .HasMany<Prescription>() 
                 .WithOne(p => p.ConsultationRecord)
                 .HasForeignKey(p => p.ConsultationRecordId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // الروشتة والأدوية (Composition: One-to-Many)
-            // لو مسحنا الروشتة، بنمسح سطور الأدوية اللي جواها (Cascade هنا مسموح لأنه جزء منها)
+           
     modelBuilder.Entity<Prescription>()
-    .HasMany(p => p.PrescriptionItems) // ✅ تم التصحيح
+    .HasMany(p => p.PrescriptionItems) 
     .WithOne(i => i.Prescription)
     .HasForeignKey(i => i.PrescriptionId)
     .OnDelete(DeleteBehavior.Cascade);
             // -----------------------------------------------------
-            // علاقات الفروع والمواعيد (Branch & Schedule)
+            // (Branch & Schedule)
             // -----------------------------------------------------
 
-            // الفرع وجداول المواعيد (Composition)
+          
             modelBuilder.Entity<ClinicBranch>()
                 .HasMany(b => b.Schedules)
                 .WithOne(s => s.ClinicBranch)
@@ -142,19 +142,18 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // -----------------------------------------------------
-            // تحسينات الأداء (Indexing) - للمشروع الكبير
+            // (Indexing)
             // -----------------------------------------------------
 
-            // فهرس على الرقم القومي للمريض (عشان البحث يكون طيارة)
+           
             modelBuilder.Entity<Patient>()
                 .HasIndex(p => p.NationalId)
                 .IsUnique();
 
-            // فهرس على كود الروشتة
+    
             modelBuilder.Entity<Prescription>()
                 .HasIndex(p => p.UniqueCode)
                 .IsUnique();
         }
     }
 }
-*/

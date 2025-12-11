@@ -69,15 +69,14 @@ namespace Nabd.Infrastructure.Repositories.Profiles
                     Id = p.Id,
                     FirstName = p.AppUser.FirstName,
                     LastName = p.AppUser.LastName,
-                    ProfileImageUrl = p.AppUser.ProfilePictureUrl, // ✅ الصح
+                    ProfileImageUrl = p.AppUser.ProfilePictureUrl,
                     PhoneNumber = p.PhoneNumber,
                     Gender = p.Gender.ToString(),
                     Age = p.Age,
 
-                    // ❌ تم حذف ImageUrl من هنا لأنها مكررة وغير موجودة في DTO
-
+                   
                     City = p.City,
-                    // Governorate = p.Governorate, // لو موجودة
+                   
 
                     TotalSessions = p.Appointments.Count(a => a.DoctorId == doctorId),
 

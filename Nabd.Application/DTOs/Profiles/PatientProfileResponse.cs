@@ -1,16 +1,14 @@
 ﻿using Nabd.Core.Enums.Identity;
-using Nabd.Core.Enums.Medical; // Gender, BloodType
+using Nabd.Core.Enums.Medical; 
 using System;
 
 namespace Nabd.Application.DTOs.Profiles
 {
-    /// <summary>
-    /// يمثل البيانات الأساسية لملف المريض (للعرض في صفحة البروفايل الشخصي)
-    /// </summary>
+  
     public class PatientProfileResponse
     {
         public Guid Id { get; set; }
-        public Guid AppUserId { get; set; } // للربط بحساب المستخدم
+        public Guid AppUserId { get; set; } 
 
         // ==========================================
         // 1. Identity & Contact
@@ -21,10 +19,10 @@ namespace Nabd.Application.DTOs.Profiles
         public string? ProfilePictureUrl { get; set; }
 
         // ==========================================
-        // 2. Demographics (مهمة للتشخيص)
+        // 2. Demographics 
         // ==========================================
         public DateTime DateOfBirth { get; set; }
-        public int Age { get; set; } // (محسوب)
+        public int Age { get; set; } 
         public Gender Gender { get; set; }
 
         public string? City { get; set; }
@@ -33,7 +31,7 @@ namespace Nabd.Application.DTOs.Profiles
         public string? MaritalStatus { get; set; }
 
         // ==========================================
-        // 3. Medical Baseline (أساسيات طبية)
+        // 3. Medical Baseline 
         // ==========================================
         public BloodType BloodType { get; set; } = BloodType.Unknown;
         public double? Weight { get; set; }

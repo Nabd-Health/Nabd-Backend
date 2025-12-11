@@ -5,15 +5,15 @@ namespace Nabd.Core.Enums
     public enum AIDoctorAction
     {
         [Description("لم يتم اتخاذ إجراء")]
-        NoAction = 0,    // الدكتور طنش الاقتراح
+        NoAction = 0,    
 
         [Description("تم القبول")]
-        Accepted = 1,    // الدكتور وافق على اقتراح الـ AI
+        Accepted = 1,    
 
         [Description("تم الرفض")]
-        Rejected = 2,    // الدكتور رفض الاقتراح
+        Rejected = 2,    
 
         [Description("تم التعديل")]
-        Modified = 3     // الدكتور قبل الاقتراح بس عدل عليه
+        Modified = 3     
     }
 }

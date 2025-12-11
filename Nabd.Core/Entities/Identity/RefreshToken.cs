@@ -6,13 +6,13 @@ namespace Nabd.Core.Entities.Identity
     public class RefreshToken : BaseEntity
     {
         // ==========================================
-        // 1. Linkage (الربط بالمستخدم)
+        // 1. Linkage 
         // ==========================================
         public required Guid AppUserId { get; set; }
         public virtual AppUser AppUser { get; set; } = null!;
 
         // ==========================================
-        // 2. Token Details (بيانات التوكن)
+        // 2. Token Details 
         // ==========================================
         public required string Token { get; set; }
 
@@ -20,23 +20,22 @@ namespace Nabd.Core.Entities.Identity
 
         public required string CreatedByIp { get; set; }
 
-        // (ملحوظة: CreatedOn موروثة من BaseEntity فمش هنكتبها تاني)
 
         // ==========================================
-        // 3. Revocation (الإلغاء)
+        // 3. Revocation
         // ==========================================
         public DateTime? RevokedOn { get; set; }
         public string? RevokedByIp { get; set; }
         public string? ReasonRevoked { get; set; }
 
         // ==========================================
-        // 4. Security Rotation (التدوير - ميزة نبض)
+        // 4. Security Rotation 
         // ==========================================
-        // التوكن الجديد الذي حل محل هذا التوكن (لسلسلة الأمان)
+       
         public string? ReplacedByToken { get; set; }
 
         // ==========================================
-        // 5. Computed Properties (حساب الحالة)
+        // 5. Computed Properties 
         // ==========================================
         public bool IsExpired => DateTime.UtcNow >= ExpiresOn;
 

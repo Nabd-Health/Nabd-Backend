@@ -9,7 +9,7 @@ namespace Nabd.Core.Enums.Identity
     public enum VerificationDocumentStatus
     {
         Pending,
-        Accepted, // أو Approved
+        Accepted, 
         Rejected
     }
 }
