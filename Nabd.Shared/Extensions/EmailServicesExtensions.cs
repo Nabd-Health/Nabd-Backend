@@ -18,7 +18,7 @@ namespace Nabd.Shared.Extensions
                 throw new InvalidOperationException("EmailSettings are not configured properly.");
             }
 
-            // تسجيل خدمة FluentEmail مع SMTP Client
+       
             services.AddFluentEmail(emailSettings.FromEmail, emailSettings.FromName)
                 .AddSmtpSender(new SmtpClient(emailSettings.SmtpHost)
                 {

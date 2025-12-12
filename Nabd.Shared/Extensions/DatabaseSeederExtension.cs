@@ -41,9 +41,7 @@ namespace Nabd.Shared.Extensions
 
             try
             {
-                // نفترض وجود ميثود ClearAsync في الواجهة
-                // var seeder = services.GetService<IDbSeeder>();
-                // if (seeder != null) await seeder.ClearAsync();
+               
             }
             catch (Exception ex)
             {

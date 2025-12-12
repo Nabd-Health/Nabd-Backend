@@ -5,7 +5,7 @@ namespace Nabd.Core.Entities.Base
 {
     public abstract class BaseEntity
     {
-        // 1. الهوية (Identity)
+        // 1.  (Identity)
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -35,7 +35,7 @@ namespace Nabd.Core.Entities.Base
         // 4. Concurrency
         // ==========================================
 
-        // ده بيمنع تضارب البيانات (Optimistic Concurrency)
+        //  (Optimistic Concurrency)
         [Timestamp]
         public byte[]? RowVersion { get; set; }
     }

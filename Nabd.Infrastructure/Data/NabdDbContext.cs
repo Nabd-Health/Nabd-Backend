@@ -150,7 +150,7 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             // -----------------------------------------------------
-            // 5. علاقات الروشتة (Prescription)
+            // 5.  (Prescription)
             // -----------------------------------------------------
             builder.Entity<Prescription>()
                 .HasMany(p => p.PrescriptionItems)
@@ -165,7 +165,7 @@ namespace Nabd.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // -----------------------------------------------------
-            // 6. ضبط الأسعار (Decimal Precision)
+            // 6.  (Decimal Precision)
             // -----------------------------------------------------
             foreach (var property in builder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetProperties())

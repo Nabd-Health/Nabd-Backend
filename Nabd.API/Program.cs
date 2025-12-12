@@ -1,47 +1,45 @@
-﻿using Nabd.API.Extensions; 
-using Nabd.Infrastructure.Extensions; 
-using Nabd.Shared.Extensions; 
+﻿using Nabd.API.Extensions;
+using Nabd.Infrastructure.Extensions;
+using Nabd.Shared.Extensions;
 using Nabd.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ====================================================
-// 1.  (Services Container)
+// 1. تسجيل الخدمات (Services Container)
 // ====================================================
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+// ----------------------------------------------------
+// التعديل هنا: شيلنا AddSwaggerGen العادية
+// وحطينا دي عشان تقرأ إعدادات القفل والتوكن
+// ----------------------------------------------------
+builder.Services.AddSwaggerDocumentation();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
-
 builder.Services.AddIdentityServices();
-
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCorsConfiguration(builder.Configuration);
 
-
 var app = builder.Build();
 
 // ====================================================
-// 2.  (HTTP Pipeline)
+// 2. ترتيب الطلبات (HTTP Pipeline)
 // ====================================================
-
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-
         var context = services.GetRequiredService<NabdDbContext>();
         await context.Database.MigrateAsync();
-
 
         await DatabaseSeederExtension.SeedDatabaseAsync(app);
     }
@@ -60,10 +58,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 app.UseCors("NabdCorsPolicy");
 
-
+// الترتيب هنا مهم جداً: Authentication الأول وبعدين Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

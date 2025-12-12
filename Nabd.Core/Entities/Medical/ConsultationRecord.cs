@@ -8,14 +8,14 @@ namespace Nabd.Core.Entities.Medical
     public class ConsultationRecord : BaseEntity
     {
         // ==========================================
-        // 1. Linkage (الربط بالموعد)
+        // 1. Linkage 
         // ==========================================
 
         public Guid AppointmentId { get; set; }
         public virtual Appointment Appointment { get; set; } = null!;
 
         // ==========================================
-        // 2. (S)ubjective Data: شكوى المريض (AI Input Model 1)
+        // 2. (S)ubjective Data
         // ==========================================
 
         [Required]
