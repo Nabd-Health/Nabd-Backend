@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nabd.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Nabd.Infrastructure.Data;
 namespace Nabd.Infrastructure.Migrations
 {
     [DbContext(typeof(NabdDbContext))]
-    partial class NabdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251212225423_AddVerificationStatusToDoctor")]
+    partial class AddVerificationStatusToDoctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -620,9 +623,6 @@ namespace Nabd.Infrastructure.Migrations
                     b.Property<int?>("DiastolicBloodPressure")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("FinalDiagnosis")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -638,9 +638,6 @@ namespace Nabd.Infrastructure.Migrations
 
                     b.Property<double?>("OxygenSaturation")
                         .HasColumnType("float");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PhysicalExaminationNotes")
                         .HasColumnType("nvarchar(max)");

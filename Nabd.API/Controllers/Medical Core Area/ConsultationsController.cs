@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nabd.Application.DTOs.Medical; 
+using Nabd.Application.DTOs.Medical;
 using Nabd.Core.Entities.Medical;
 using Nabd.Core.Enums.Operations;
 using Nabd.Core.Interfaces;
@@ -16,7 +16,6 @@ namespace Nabd.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-       
 
         public ConsultationsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -24,6 +23,7 @@ namespace Nabd.API.Controllers
             _mapper = mapper;
         }
 
+       
         private Guid GetCurrentUserId()
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -31,7 +31,7 @@ namespace Nabd.API.Controllers
         }
 
         // ==========================================
-        // 1.  (Start Consultation)
+        // 1.  (Start Consultation) 
         // ==========================================
         [HttpPost]
         [Authorize(Roles = "Doctor")]
@@ -39,24 +39,36 @@ namespace Nabd.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var doctorId = GetCurrentUserId();
+            // 1. نجيب الدكتور الحقيقي من الداتابيز بالإيميل
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
 
-            
+            if (doctor == null) return Unauthorized();
+
+            // 2. نجيب الحجز
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
             if (appointment == null) return NotFound("Appointment not found.");
 
-            if (appointment.DoctorId != doctorId)
-                return Forbid("You can only create records for your own appointments.");
+            // 3. التأكد إن الحجز يخص الدكتور ده
+            if (appointment.DoctorId != doctor.Id)
+            {
+               
+                return StatusCode(403, new { Message = "You can only create records for your own appointments." });
+            }
 
-            
+            // 4. التأكد إن مفيش كشف مسجل قبل كده لنفس الحجز
             var existingRecord = await _unitOfWork.ConsultationRecords.GetByAppointmentIdAsync(dto.AppointmentId);
             if (existingRecord != null)
                 return Conflict(new { Message = "Consultation record already exists for this appointment." });
 
-         
+            // 5. إنشاء الكشف
             var record = _mapper.Map<ConsultationRecord>(dto);
 
+            // ربط الكشف بالدكتور والمريض بناءً على بيانات الحجز 
+            record.DoctorId = doctor.Id;
+            record.PatientId = appointment.PatientId;
 
+            // تحديث حالة الحجز لـ "جاري العمل"
             appointment.Status = AppointmentStatus.InProgress;
             _unitOfWork.Appointments.Update(appointment);
 
@@ -68,22 +80,29 @@ namespace Nabd.API.Controllers
         }
 
         // ==========================================
-        // 2.  (Get Details)
+        // 2.  (Get Details) 
         // ==========================================
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultationById(Guid id)
         {
-            var record = await _unitOfWork.ConsultationRecords.GetByIdWithDetailsAsync(id); 
+            var record = await _unitOfWork.ConsultationRecords.GetByIdWithDetailsAsync(id);
             if (record == null) return NotFound("Consultation record not found.");
 
-            var userId = GetCurrentUserId();
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
-      
-            var appointment = await _unitOfWork.Appointments.GetByIdAsync(record.AppointmentId);
-
-            if (role == "Doctor" && appointment?.DoctorId != userId) return Forbid();
-            if (role == "Patient" && appointment?.PatientId != userId) return Forbid();
+            // التحقق من الصلاحيات
+            if (role == "Doctor")
+            {
+                var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
+                // الدكتور يشوف الكشف لو هو اللي كتبه أو لو عنده صلاحية تانية (مثل تحويل)
+                if (doctor == null || record.DoctorId != doctor.Id) return StatusCode(403);
+            }
+            else if (role == "Patient")
+            {
+                var patient = await _unitOfWork.Patients.GetByEmailAsync(email!);
+                if (patient == null || record.PatientId != patient.Id) return StatusCode(403);
+            }
 
             var response = _mapper.Map<ConsultationRecordResponse>(record);
             return Ok(response);
@@ -99,25 +118,28 @@ namespace Nabd.API.Controllers
             var record = await _unitOfWork.ConsultationRecords.GetByIdAsync(id);
             if (record == null) return NotFound();
 
-            var appointment = await _unitOfWork.Appointments.GetByIdAsync(record.AppointmentId);
-            if (appointment?.DoctorId != GetCurrentUserId()) return Forbid();
+            // التحقق من الدكتور
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
 
+            if (doctor == null || record.DoctorId != doctor.Id) return StatusCode(403);
 
             record.Symptoms = dto.Symptoms ?? record.Symptoms;
             record.FinalDiagnosis = dto.FinalDiagnosis ?? record.FinalDiagnosis;
             record.TreatmentPlan = dto.TreatmentPlan ?? record.TreatmentPlan;
 
-
             if (dto.Weight.HasValue) record.WeightAtVisit = dto.Weight;
-
 
             _unitOfWork.ConsultationRecords.Update(record);
 
-
             if (dto.MarkAsCompleted)
             {
-                appointment!.Status = AppointmentStatus.Completed;
-                _unitOfWork.Appointments.Update(appointment);
+                var appointment = await _unitOfWork.Appointments.GetByIdAsync(record.AppointmentId);
+                if (appointment != null)
+                {
+                    appointment.Status = AppointmentStatus.Completed;
+                    _unitOfWork.Appointments.Update(appointment);
+                }
             }
 
             await _unitOfWork.CompleteAsync();
@@ -133,8 +155,6 @@ namespace Nabd.API.Controllers
         {
             var record = await _unitOfWork.ConsultationRecords.GetByIdAsync(id);
             if (record == null) return NotFound();
-
- 
 
             // (Mock)
             var mockResponse = new

@@ -70,8 +70,8 @@ namespace Nabd.Core.Entities.Profiles
 
         public DoctorStatus Status { get; set; } = DoctorStatus.Pending;
         public bool IsAvailable { get; set; } = true;
+        public VerificationStatus VerificationStatus { get; set; } = VerificationStatus.Unverified;
 
-    
         public DateTime? VerifiedAt { get; set; }
 
         // ==========================================

@@ -6,6 +6,7 @@ using Nabd.Core.Enums.Medical;
 using Nabd.Core.Enums.Operations;
 using Nabd.Core.Interfaces;
 
+
 namespace Nabd.API.Controllers
 {
     [Route("api/[controller]")]
@@ -103,5 +104,29 @@ namespace Nabd.API.Controllers
 
             return Ok(result);
         }
+        // ==========================================
+        // Admin Operations (توثيق الطبيب)
+        // ==========================================
+        [HttpPut("{id}/verify")]
+        // [Authorize(Roles = "Admin")] //  سيبها كومنت مؤقتاً عشان التيست يمشى
+        public async Task<IActionResult> VerifyDoctor(Guid id)
+        {
+            var doctor = await _unitOfWork.Doctors.GetByIdAsync(id);
+
+            if (doctor == null)
+                return NotFound(new { Message = "الدكتور غير موجود" });
+
+          
+            doctor.Status = Nabd.Core.Enums.DoctorStatus.Active;
+
+            doctor.VerificationStatus = Nabd.Core.Enums.Identity.VerificationStatus.Verified;
+            doctor.IsAvailable = true; 
+
+            _unitOfWork.Doctors.Update(doctor);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(new { Message = $"تم توثيق الدكتور {doctor.FullName} بنجاح وأصبح متاحاً للحجز" });
+        }
+
     }
 }

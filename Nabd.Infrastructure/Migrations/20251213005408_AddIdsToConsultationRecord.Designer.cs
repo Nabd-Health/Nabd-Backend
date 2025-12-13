@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nabd.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Nabd.Infrastructure.Data;
 namespace Nabd.Infrastructure.Migrations
 {
     [DbContext(typeof(NabdDbContext))]
-    partial class NabdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213005408_AddIdsToConsultationRecord")]
+    partial class AddIdsToConsultationRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

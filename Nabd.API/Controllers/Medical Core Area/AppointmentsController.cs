@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nabd.Application.DTOs.Operations; 
+using Nabd.Application.DTOs.Operations;
 using Nabd.Core.Entities.Medical;
 using Nabd.Core.Enums.Operations;
 using Nabd.Core.Interfaces;
@@ -11,7 +11,7 @@ namespace Nabd.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] 
+    [Authorize]
     public class AppointmentsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +23,7 @@ namespace Nabd.API.Controllers
             _mapper = mapper;
         }
 
-
+        // Helper: لجلب الـ UserId الخاص بالـ Identity (للدكاترة فقط أو العمليات العامة)
         private Guid GetCurrentUserId()
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -39,15 +39,20 @@ namespace Nabd.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var patientId = GetCurrentUserId();
+            // 1. نجيب إيميل المستخدم الحالي
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (email == null) return Unauthorized();
 
+            // 2. نجيب المريض الحقيقي من الداتابيز عشان ناخد الـ ID بتاعه
+            var patient = await _unitOfWork.Patients.GetByEmailAsync(email);
+            if (patient == null) return BadRequest("ملف المريض غير موجود.");
 
+            // 3. نتأكد من الدكتور
             var doctor = await _unitOfWork.Doctors.GetByIdWithSchedulesAsync(dto.DoctorId);
             if (doctor == null) return NotFound("Doctor not found.");
 
-
+            // 4. التحقق من التعارض
             var endTime = dto.AppointmentDate.AddMinutes(doctor.SessionDurationMinutes);
-
             var hasConflict = await _unitOfWork.Appointments.HasConflictingAppointmentAsync(
                 dto.DoctorId, dto.AppointmentDate, endTime);
 
@@ -56,19 +61,20 @@ namespace Nabd.API.Controllers
                 return Conflict(new { Message = "هذا الموعد محجوز بالفعل، يرجى اختيار موعد آخر." });
             }
 
-       
+            // 5. إنشاء الحجز
             var appointment = _mapper.Map<Appointment>(dto);
-            appointment.PatientId = patientId;
+
+           
+            appointment.PatientId = patient.Id;
+
             appointment.Status = AppointmentStatus.Pending;
-            appointment.Price = doctor.ConsultationFee;   
+            appointment.Price = doctor.ConsultationFee;
             appointment.EstimatedDurationMinutes = doctor.SessionDurationMinutes;
 
             await _unitOfWork.Appointments.AddAsync(appointment);
             await _unitOfWork.CompleteAsync();
 
-            
             var response = _mapper.Map<AppointmentResponse>(appointment);
-           
             response.DoctorName = doctor.FullName;
 
             return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id }, response);
@@ -84,27 +90,42 @@ namespace Nabd.API.Controllers
             var appointment = await _unitOfWork.Appointments.GetByIdWithDetailsAsync(id);
             if (appointment == null) return NotFound("Appointment not found.");
 
-            var userId = GetCurrentUserId();
+            var currentUserId = GetCurrentUserId(); // AppUserId
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
 
-            if (userRole == "Doctor" && appointment.DoctorId != userId) return Forbid();
-            if (userRole == "Patient" && appointment.PatientId != userId) return Forbid();
+            //(Security Check)
+            if (userRole == "Doctor")
+            {
+              
+                var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
+                if (doctor == null || appointment.DoctorId != doctor.Id) return Forbid();
+            }
+
+            if (userRole == "Patient")
+            {
+                var patient = await _unitOfWork.Patients.GetByEmailAsync(email!);
+                if (patient == null || appointment.PatientId != patient.Id) return Forbid();
+            }
 
             var response = _mapper.Map<AppointmentResponse>(appointment);
             return Ok(response);
         }
 
-
         [HttpGet("my-appointments")]
         [Authorize(Roles = "Patient")]
         public async Task<IActionResult> GetMyAppointments()
         {
-            var patientId = GetCurrentUserId();
-            var appointments = await _unitOfWork.Appointments.GetByPatientIdAsync(patientId);
+            
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var patient = await _unitOfWork.Patients.GetByEmailAsync(email!);
+
+            if (patient == null) return NotFound("Patient profile not found");
+
+            var appointments = await _unitOfWork.Appointments.GetByPatientIdAsync(patient.Id);
             var result = _mapper.Map<IEnumerable<AppointmentResponse>>(appointments);
             return Ok(result);
         }
-
 
         [HttpGet("doctor/requests")]
         [Authorize(Roles = "Doctor")]
@@ -112,17 +133,16 @@ namespace Nabd.API.Controllers
             [FromQuery] DateTime? date,
             [FromQuery] AppointmentStatus? status)
         {
-            var doctorId = GetCurrentUserId();
-            var doctor = await _unitOfWork.Doctors.GetByEmailAsync(User.FindFirst(ClaimTypes.Email)!.Value);
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
             if (doctor == null) return Unauthorized();
-
 
             var result = await _unitOfWork.Appointments.GetByDoctorIdWithFiltersAsync(
                 doctor.Id,
-                date?.Date, 
-                date?.Date.AddDays(1), 
+                date?.Date,
+                date?.Date.AddDays(1),
                 status,
-                1, 50, "Date", "Asc"); 
+                1, 50, "Date", "Asc");
 
             var response = _mapper.Map<IEnumerable<AppointmentResponse>>(result.Appointments);
             return Ok(response);
@@ -146,8 +166,6 @@ namespace Nabd.API.Controllers
 
             appointment.Status = newStatus;
 
-         
-
             _unitOfWork.Appointments.Update(appointment);
             await _unitOfWork.CompleteAsync();
 
@@ -160,22 +178,41 @@ namespace Nabd.API.Controllers
         [HttpPut("{id}/cancel")]
         public async Task<IActionResult> CancelAppointment(Guid id, [FromBody] string reason)
         {
-            var userId = GetCurrentUserId();
             var appointment = await _unitOfWork.Appointments.GetByIdAsync(id);
-
             if (appointment == null) return NotFound();
 
-            bool isPatient = appointment.PatientId == userId;
-            bool isDoctor = appointment.DoctorId == userId;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (!isPatient && !isDoctor) return Forbid();
+            bool isAuthorized = false;
+            bool cancelledByPatient = false;
+
+            if (role == "Patient")
+            {
+                var patient = await _unitOfWork.Patients.GetByEmailAsync(email!);
+                if (patient != null && appointment.PatientId == patient.Id)
+                {
+                    isAuthorized = true;
+                    cancelledByPatient = true;
+                }
+            }
+            else if (role == "Doctor")
+            {
+                var doctor = await _unitOfWork.Doctors.GetByEmailAsync(email!);
+                if (doctor != null && appointment.DoctorId == doctor.Id)
+                {
+                    isAuthorized = true;
+                }
+            }
+
+            if (!isAuthorized) return Forbid();
 
             if (appointment.Status == AppointmentStatus.Completed)
                 return BadRequest("Cannot cancel a completed appointment.");
 
             appointment.Status = AppointmentStatus.Cancelled;
             appointment.CancellationReason = reason;
-            appointment.CancelledByPatient = isPatient;
+            appointment.CancelledByPatient = cancelledByPatient;
 
             _unitOfWork.Appointments.Update(appointment);
             await _unitOfWork.CompleteAsync();

@@ -10,7 +10,8 @@ namespace Nabd.Core.Entities.Medical
         // ==========================================
         // 1. Linkage 
         // ==========================================
-
+        public Guid DoctorId { get; set; }
+        public Guid PatientId { get; set; }
         public Guid AppointmentId { get; set; }
         public virtual Appointment Appointment { get; set; } = null!;
 
